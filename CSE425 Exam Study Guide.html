@@ -1,0 +1,1050 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>CSE425 Exam Study Guide</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@75..100,500..800&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: sticky section index on the left (wide screens), one reading column on the right; collapses to a single column with a fold-out index on phones. */
+:root{
+  --bg:#f5f7f8; --surface:#ffffff; --ink:#15212b; --muted:#566371; --line:#d6dde3;
+  --accent:#0a6b66; --accent-soft:#e0f0ee; --warn:#8f5400; --warn-soft:#fbefd9;
+  --code:#ecf0f2; --mark:#c9e7e3;
+  --f-display:"Archivo","Arial Narrow",system-ui,sans-serif;
+  --f-body:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --f-mono:"IBM Plex Mono",ui-monospace,"SFMono-Regular",Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
+  --bg:#0e1417; --surface:#151d22; --ink:#e2e8ec; --muted:#9aa7b1; --line:#2a363e;
+  --accent:#55c4b9; --accent-soft:#123130; --warn:#efb35c; --warn-soft:#30250f;
+  --code:#1b252b; --mark:#1d4440; color-scheme:dark; } }
+:root[data-theme="dark"]{
+  --bg:#0e1417; --surface:#151d22; --ink:#e2e8ec; --muted:#9aa7b1; --line:#2a363e;
+  --accent:#55c4b9; --accent-soft:#123130; --warn:#efb35c; --warn-soft:#30250f;
+  --code:#1b252b; --mark:#1d4440; color-scheme:dark; }
+
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:16px;line-height:1.6;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:0 64px}
+a{color:var(--accent)}
+a:focus-visible,summary:focus-visible,input:focus-visible,button:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:3px}
+
+.shell{max-width:1180px;margin:0 auto;display:grid;grid-template-columns:250px minmax(0,1fr);gap:48px}
+@media (max-width:1000px){.shell{grid-template-columns:minmax(0,1fr);gap:0}}
+
+/* index */
+.toc{position:sticky;top:calc(env(safe-area-inset-top,0px) + 20px);align-self:start;max-height:calc(100vh - 40px);overflow:auto;padding-block:28px 20px;font-size:13.5px}
+.toc h2{font-family:var(--f-display);font-stretch:85%;font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:0 0 10px}
+.toc ol{list-style:none;margin:0;padding:0;display:grid;gap:2px}
+.toc a{display:flex;gap:8px;text-decoration:none;color:var(--ink);padding:5px 8px;border-radius:6px;line-height:1.35}
+.toc a:hover{background:var(--accent-soft)}
+.toc a.on{background:var(--accent-soft);color:var(--accent);font-weight:600}
+.toc .n{font-family:var(--f-mono);font-size:12px;color:var(--muted);min-width:18px}
+.toc a .tick{margin-left:auto;color:var(--accent);visibility:hidden}
+.toc a.studied .tick{visibility:visible}
+.toc-mobile{display:none}
+@media (max-width:1000px){
+  .toc{display:none}
+  .toc-mobile{display:block;margin:16px 0 0;border:1px solid var(--line);border-radius:10px;background:var(--surface);padding:10px 14px}
+  .toc-mobile summary{cursor:pointer;font-weight:600}
+  .toc-mobile ol{margin:8px 0 2px;padding-left:22px}
+  .toc-mobile li{margin:3px 0}
+}
+
+/* masthead */
+.mast{padding-block:44px 8px;border-bottom:2px solid var(--ink);margin-bottom:8px}
+.course{font-family:var(--f-mono);font-size:12.5px;color:var(--muted);letter-spacing:.02em}
+h1{font-family:var(--f-display);font-stretch:78%;font-weight:800;font-size:clamp(38px,6vw,60px);line-height:1;letter-spacing:-.01em;margin:10px 0 14px;text-wrap:balance}
+.lede{max-width:66ch;color:var(--muted);margin:0 0 18px}
+.scope{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 18px;padding:0;list-style:none}
+.scope li{font-family:var(--f-mono);font-size:12px;border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:3px 10px}
+.scope li.out{border-style:dashed;color:var(--muted);text-decoration:line-through;text-decoration-color:var(--muted)}
+
+main{min-width:0;max-width:780px}
+.part{padding-top:36px;scroll-margin-top:12px}
+.part-head{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:8px 16px;border-bottom:1px solid var(--line);padding-bottom:10px;margin-bottom:6px}
+.eyebrow{display:block;font-family:var(--f-mono);font-size:12px;color:var(--accent);letter-spacing:.04em;text-transform:uppercase}
+h2{font-family:var(--f-display);font-stretch:80%;font-weight:800;font-size:clamp(28px,4vw,38px);line-height:1.05;margin:4px 0 0;text-wrap:balance}
+h3{font-family:var(--f-display);font-stretch:90%;font-weight:700;font-size:21px;line-height:1.2;margin:30px 0 8px;scroll-margin-top:12px;text-wrap:balance}
+h3 .sn{font-family:var(--f-mono);font-weight:500;font-size:14px;color:var(--muted);margin-right:8px}
+h4{font-size:15px;font-weight:600;margin:20px 0 6px}
+p{margin:0 0 12px}
+ul,ol{margin:0 0 12px;padding-left:22px}
+li{margin:3px 0}
+.done{font-size:13px;color:var(--muted);display:inline-flex;gap:6px;align-items:center;cursor:pointer;user-select:none}
+.done input{accent-color:var(--accent);width:16px;height:16px}
+
+/* callouts */
+.key{border-left:3px solid var(--accent);background:var(--accent-soft);padding:10px 14px;border-radius:0 8px 8px 0;margin:14px 0;font-weight:500}
+.key::before{content:"Remember";display:block;font-family:var(--f-mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--accent);font-weight:500;margin-bottom:2px}
+.trap{border:1px solid var(--warn);background:var(--warn-soft);padding:10px 14px;border-radius:8px;margin:14px 0}
+.trap::before{content:"Exam trap";display:block;font-family:var(--f-mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--warn);margin-bottom:2px}
+.note{border:1px dashed var(--muted);padding:10px 14px;border-radius:8px;margin:18px 0;color:var(--muted);font-size:14.5px}
+.note::before{content:"End of scope";display:block;font-family:var(--f-mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;margin-bottom:2px}
+.trap p:last-child,.key p:last-child,.note p:last-child{margin:0}
+.lab{border:1px dashed var(--line);background:var(--surface);padding:12px 16px;border-radius:8px;margin:16px 0}
+.lab::before{content:"Lab";display:block;font-family:var(--f-mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:4px}
+.xref{font-family:var(--f-mono);font-size:.82em;text-decoration:none;background:var(--code);border:1px solid var(--line);border-radius:4px;padding:0 5px;white-space:nowrap}
+.xref:hover{border-color:var(--accent)}
+.t{font-family:var(--f-mono);font-size:.8em;font-weight:500;color:var(--accent);border:1px solid var(--accent);border-radius:4px;padding:0 4px;white-space:nowrap}
+
+code,.m{font-family:var(--f-mono);font-size:.88em;background:var(--code);padding:1px 5px;border-radius:4px}
+pre{font-family:var(--f-mono);font-size:13px;line-height:1.5;background:var(--code);border:1px solid var(--line);border-radius:8px;padding:12px 14px;overflow-x:auto;margin:10px 0 14px}
+.f{display:block;font-family:var(--f-mono);font-size:14.5px;background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:10px 14px;margin:10px 0;overflow-x:auto;white-space:nowrap}
+
+/* tables */
+.tw{overflow-x:auto;margin:10px 0 16px;border:1px solid var(--line);border-radius:8px;background:var(--surface)}
+table{border-collapse:collapse;width:100%;font-size:14px;line-height:1.45}
+th,td{text-align:left;vertical-align:top;padding:8px 10px;border-bottom:1px solid var(--line)}
+th{font-weight:600;background:var(--code);white-space:nowrap}
+tr:last-child td{border-bottom:0}
+td.c{text-align:center;font-family:var(--f-mono)}
+.yes{color:var(--accent);font-weight:600}
+.no{color:var(--warn);font-weight:600}
+.num{font-variant-numeric:tabular-nums}
+
+/* diagrams */
+figure{margin:14px 0 18px}
+.dg{overflow-x:auto;border:1px solid var(--line);border-radius:8px;background:var(--surface);padding:10px}
+.dg svg{display:block;min-width:560px;width:100%;height:auto}
+figcaption{font-size:13px;color:var(--muted);margin-top:6px}
+.d-life{stroke:var(--line);stroke-width:2;fill:none}
+.d-box{fill:var(--code);stroke:var(--line);stroke-width:1}
+.d-eve{fill:var(--warn-soft);stroke:var(--warn);stroke-width:1}
+.d-arrow{stroke:var(--ink);stroke-width:1.5;fill:none}
+.d-arrow.acc{stroke:var(--accent)}
+.d-arrow.warn{stroke:var(--warn)}
+.d-arrow.dash{stroke-dasharray:5 4}
+.d-head{fill:var(--ink)} .d-head.acc{fill:var(--accent)} .d-head.warn{fill:var(--warn)}
+.d-t{fill:var(--ink);font-family:var(--f-body);font-size:13px}
+.d-tb{fill:var(--ink);font-family:var(--f-body);font-size:14px;font-weight:600}
+.d-tm{fill:var(--muted);font-family:var(--f-mono);font-size:11.5px}
+.d-ta{fill:var(--accent);font-family:var(--f-mono);font-size:11.5px}
+.d-tw{fill:var(--warn);font-family:var(--f-mono);font-size:11.5px}
+.d-band{fill:var(--accent-soft)}
+.d-dot{fill:var(--accent)} .d-dott{fill:var(--surface);font-family:var(--f-mono);font-size:11px;font-weight:500}
+
+/* chain list (DNSSEC) */
+.chain{list-style:none;padding:0;margin:12px 0 16px;display:grid;gap:0}
+.chain li{position:relative;margin:0;padding:8px 12px 8px 40px;border-left:2px solid var(--accent);margin-left:12px}
+.chain li::before{content:"";position:absolute;left:-7px;top:14px;width:12px;height:12px;border-radius:50%;background:var(--surface);border:2px solid var(--accent)}
+.chain li span{font-family:var(--f-mono);font-size:13px;color:var(--muted)}
+
+/* practice */
+details.q{border:1px solid var(--line);border-radius:8px;background:var(--surface);margin:8px 0;padding:0}
+details.q summary{cursor:pointer;padding:10px 14px;list-style:none;display:flex;gap:10px}
+details.q summary::-webkit-details-marker{display:none}
+details.q summary::before{content:"+";font-family:var(--f-mono);color:var(--accent);font-weight:600}
+details.q[open] summary::before{content:"−"}
+details.q .a{padding:0 14px 12px 34px;border-top:1px solid var(--line);padding-top:10px}
+.qtools{display:flex;gap:8px;flex-wrap:wrap;margin:8px 0 4px}
+button{font:inherit;font-size:13.5px;border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:6px;padding:6px 12px;cursor:pointer}
+button:hover{border-color:var(--accent)}
+.wk{font-family:var(--f-mono);font-size:11.5px;color:var(--muted);white-space:nowrap}
+
+@media (prefers-reduced-motion:no-preference){html{scroll-behavior:smooth}}
+</style>
+
+<div class="shell">
+<nav class="toc" aria-label="Sections">
+  <h2>Sections</h2>
+  <ol id="tocList">
+    <li><a href="#s0"><span class="n">0</span>Start here<span class="tick">✓</span></a></li>
+    <li><a href="#s1"><span class="n">1</span>Foundations<span class="tick">✓</span></a></li>
+    <li><a href="#s2"><span class="n">2</span>Symmetric crypto<span class="tick">✓</span></a></li>
+    <li><a href="#s3"><span class="n">3</span>Integrity &amp; public key<span class="tick">✓</span></a></li>
+    <li><a href="#s4"><span class="n">4</span>HTTP &amp; sessions<span class="tick">✓</span></a></li>
+    <li><a href="#s5"><span class="n">5</span>DNS<span class="tick">✓</span></a></li>
+    <li><a href="#s6"><span class="n">6</span>TLS 1.3 (to slide 52)<span class="tick">✓</span></a></li>
+    <li><a href="#s7"><span class="n">7</span>Formula &amp; mechanism sheet<span class="tick">✓</span></a></li>
+    <li><a href="#s8"><span class="n">8</span>Practice questions<span class="tick">✓</span></a></li>
+  </ol>
+</nav>
+
+<main>
+<header class="mast">
+  <div class="course">CSE425 Network Security · Akdeniz University · Dr. Manolya Atalay</div>
+  <h1>Exam Study Guide</h1>
+  <p class="lede">Weeks 1–6 in one pass. Every idea is explained once, in the section where it is first taught. When a later week reuses it, you get a link back (like <a class="xref" href="#s3-4">§3.4</a>) instead of a second explanation. Tick “studied” on each part to track your progress in this browser.</p>
+  <ul class="scope" aria-label="Decks covered">
+    <li>W1 lecture + lab</li><li>W2 symmetric primitives</li><li>W3 lecture + lab</li><li>W4 HTTP &amp; sessions</li><li>W5 DNS self-study</li><li>W6 TLS slides 1–52</li>
+    <li class="out">W6 Part IV onward (TLS 1.2 vs 1.3, key schedule, PKI…)</li>
+  </ul>
+  <details class="toc-mobile"><summary>Sections</summary>
+    <ol>
+      <li><a href="#s0">Start here</a></li><li><a href="#s1">Foundations</a></li><li><a href="#s2">Symmetric crypto</a></li><li><a href="#s3">Integrity &amp; public key</a></li><li><a href="#s4">HTTP &amp; sessions</a></li><li><a href="#s5">DNS</a></li><li><a href="#s6">TLS 1.3 (to slide 52)</a></li><li><a href="#s7">Formula &amp; mechanism sheet</a></li><li><a href="#s8">Practice questions</a></li>
+    </ol>
+  </details>
+</header>
+
+<!-- ============ 0 ============ -->
+<section class="part" id="s0">
+  <div class="part-head"><div><span class="eyebrow">Read first · 5 minutes</span><h2>Start here</h2></div>
+  <label class="done"><input type="checkbox" id="done-s0" data-sec="s0"> studied</label></div>
+
+  <h3 id="s0-1"><span class="sn">0.1</span>The answer formula</h3>
+  <p>“Secure” is not a complete sentence. Every strong exam answer names four things:</p>
+  <span class="f">security claim = property + asset + adversary model + assumptions</span>
+  <p>Weak: “HTTPS is secure.” Strong: “TLS protects the <em>confidentiality and integrity</em> of <em>application data</em> against a <em>network attacker</em> who <em>cannot compromise the endpoints or break the cryptography</em>.”</p>
+  <p>For attack scenarios, use the five-part pattern from Week 4: <b>asset → required property → attacker position → attacker behaviour → consequence</b>. Say “the mode/parameter was misused” rather than “AES is broken” when that is what happened.</p>
+
+  <h3 id="s0-2"><span class="sn">0.2</span>Seven lessons that repeat every week</h3>
+  <p>Most exam questions are one of these lessons in a new protocol. They are tagged <span class="t">T1</span>–<span class="t">T7</span> throughout the guide.</p>
+  <div class="tw"><table>
+    <tr><th>Tag</th><th>Lesson</th><th>Where it shows up</th></tr>
+    <tr><td><span class="t">T1</span></td><td>A security claim needs property + asset + adversary + assumptions.</td><td>W1 everywhere; every case study</td></tr>
+    <tr><td><span class="t">T2</span></td><td>Properties are independent, but one failure can cascade into another.</td><td>W1 independence table; W4 cookie leak → session hijack; W5 DNSSEC vs DoH</td></tr>
+    <tr><td><span class="t">T3</span></td><td>A secure primitive does not imply a secure construction or protocol.</td><td>W1 replay; W2 ECB; W3 H(K‖m), textbook RSA, raw DH; W6 CBC MAC-then-encrypt</td></tr>
+    <tr><td><span class="t">T4</span></td><td>Encryption without peer authentication gives you a private conversation with the wrong person.</td><td>W1 foreshadow; W3 DH MITM + lab; W3 OpenSSH host keys; W4 certificate validation; W5 DoH to a lying resolver; W6 CertificateVerify</td></tr>
+    <tr><td><span class="t">T5</span></td><td>Uniqueness and unpredictability (keys, nonces, IVs, tokens) are security requirements.</td><td>W2 OTP/CTR reuse; W3 CSPRNG, Debian OpenSSL; W4 session IDs; W5 TXID + port; W6 record nonces</td></tr>
+    <tr><td><span class="t">T6</span></td><td>Protecting the channel is not protecting the data, and neither fixes the application.</td><td>W4 HTTPS vs XSS/SQLi; W5 DoT/DoH vs DNSSEC; W6 “what TLS does not guarantee”</td></tr>
+    <tr><td><span class="t">T7</span></td><td>Something hard to guess is not the same as authentication.</td><td>W4 bearer tokens; W5 TXID/port acting as a weak password</td></tr>
+  </table></div>
+</section>
+
+<!-- ============ 1 ============ -->
+<section class="part" id="s1">
+  <div class="part-head"><div><span class="eyebrow">Week 1 · lecture + lab</span><h2>1 · Foundations</h2></div>
+  <label class="done"><input type="checkbox" id="done-s1" data-sec="s1"> studied</label></div>
+
+  <h3 id="s1-1"><span class="sn">1.1</span>Security properties</h3>
+  <p>A property always belongs to an <b>asset</b> (password, session cookie, transfer command, audit log, the service itself). “We need integrity” is incomplete until you say integrity <em>of what</em>. The STRIDE column is the threat that violates each property; STRIDE is covered in <a class="xref" href="#s1-2">§1.2</a>.</p>
+  <div class="tw"><table>
+    <tr><th>Property</th><th>Question it answers</th><th>Example violation</th><th>STRIDE threat</th></tr>
+    <tr><td>Confidentiality</td><td>Who can learn it?</td><td>Passive sniffer reads a plaintext HTTP login</td><td>Information disclosure</td></tr>
+    <tr><td>Integrity</td><td>Can it be changed without detection?</td><td><code>TRANSFER 100 TL TO BOB</code> → <code>900 TL TO EVE</code></td><td>Tampering</td></tr>
+    <tr><td>Availability</td><td>Can authorised users reach it when needed?</td><td>DDoS, SYN flood, jamming, resource exhaustion</td><td>Denial of service</td></tr>
+    <tr><td>Authentication</td><td>Who is this? Who created this message?</td><td>Attacker impersonates the bank</td><td>Spoofing</td></tr>
+    <tr><td>Authorization</td><td>What is this identity allowed to do?</td><td>Logged-in student gains admin rights</td><td>Elevation of privilege</td></tr>
+    <tr><td>Non-repudiation / accountability</td><td>Can an actor later deny the action?</td><td>Student denies dropping a course</td><td>Repudiation</td></tr>
+  </table></div>
+  <ul>
+    <li><b>Integrity does not need secrecy.</b> Signed software updates and public announcements need integrity and origin authentication, but no confidentiality.</li>
+    <li><b>Entity authentication</b>: the party in the protocol <em>right now</em> is who it claims (e.g. checking a server certificate). <b>Data-origin authentication</b>: this message was produced by a holder of the credential (e.g. a signed update). Talking to Bob does not prove Bob wrote every later object.</li>
+    <li><b>Authentication ≠ authorization.</b> A valid identity can still issue commands it is not allowed to issue.</li>
+    <li><b>Non-repudiation is evidence for a third party.</b> Integrity says “not changed”, authentication says “who produced it”, non-repudiation says “can this be shown to someone else”. Mechanisms: signatures, audit logs, trusted timestamps, key management. A MAC cannot provide it; see the comparison in <a class="xref" href="#s3-5">§3.5</a>.</li>
+  </ul>
+  <p><b>Properties are independent</b> <span class="t">T2</span>. There is no single “security switch”:</p>
+  <div class="tw"><table>
+    <tr><th>Scenario</th><th>C</th><th>I</th><th>A</th><th>Auth</th></tr>
+    <tr><td>Encrypted file the attacker can delete</td><td class="c yes">✓</td><td class="c">?</td><td class="c no">✗</td><td class="c">—</td></tr>
+    <tr><td>Public signed announcement</td><td class="c no">✗</td><td class="c yes">✓</td><td class="c yes">✓</td><td class="c yes">✓ origin</td></tr>
+    <tr><td>HTTPS server under DDoS</td><td class="c yes">✓</td><td class="c yes">✓</td><td class="c no">✗</td><td class="c yes">✓</td></tr>
+    <tr><td>Unauthenticated encrypted MITM</td><td class="c">fails in practice</td><td class="c">?</td><td class="c yes">✓</td><td class="c no">✗</td></tr>
+  </table></div>
+  <h4>Quick classifier (from the lecture)</h4>
+  <div class="tw"><table>
+    <tr><th>Event</th><th>Classification</th></tr>
+    <tr><td>Attacker reads an HTTP password</td><td>Confidentiality; passive observation</td></tr>
+    <tr><td>Attacker changes a DNS response</td><td>Integrity / authentication of naming; active</td></tr>
+    <tr><td>Server flooded offline</td><td>Availability; active resource exhaustion</td></tr>
+    <tr><td>User talks to an impersonator through encryption</td><td>Authentication failure; encryption is not enough <span class="t">T4</span></td></tr>
+    <tr><td>Encrypted payment is replayed</td><td>Freshness / protocol flaw; crypto not necessarily broken <span class="t">T3</span></td></tr>
+  </table></div>
+
+  <h3 id="s1-2"><span class="sn">1.2</span>Threat modeling</h3>
+  <span class="f">threat model = assets + actors + trust + attacker capabilities</span>
+  <p>It is a structured way to decide what can go wrong and what matters, and it states what is inside and outside the security claim. For every asset ask: what if it is <b>read, changed, deleted, forged, or made unavailable</b>?</p>
+  <ul>
+    <li><b>Actors and privilege</b>: trust is contextual (student, lecturer, admin, web server, database). Privilege boundaries become attack goals.</li>
+    <li><b>Trust boundary</b>: wherever data crosses one (untrusted network → web server → database), ask what happens if the attacker controls it. Treat the network as untrusted unless stated otherwise.</li>
+    <li><b>Attack surface</b>: every interface the adversary can interact with (TCP 22 SSH, 80 HTTP, 443 HTTPS, UDP 53 DNS, admin API). Surface is not automatically a vulnerability, but every exposed parser needs analysis; reducing exposure is a defence.</li>
+    <li><b>STRIDE</b> (Spoofing, Tampering, Repudiation, Information disclosure, Denial of service, Elevation of privilege) is a <em>checklist for generating threats</em>, mapped to properties in the table above. It gives a memory aid and shared vocabulary. It is <b>not</b> a proof, not a complete attacker model, and does not guarantee all threats were found.</li>
+    <li><b>Attack trees</b>: root = attacker goal, branches = ways to reach it, leaves = concrete steps. <b>OR</b> node: any child suffices (sniff <em>or</em> phish the password). <b>AND</b> node: all children needed (capture traffic <em>and</em> obtain key). Annotate paths with cost, skill, time and detectability to compare them. Guessing a weak password is cheap; breaking AES-256 is “astronomical, not feasible”.</li>
+  </ul>
+
+  <h3 id="s1-3"><span class="sn">1.3</span>Adversary models</h3>
+  <p>Ask about capabilities before labels: can the attacker observe? modify, replay, drop, inject? send but not see responses? compromise endpoints? how much computation? which keys or tokens do they hold?</p>
+  <h4>Attacker position × behaviour</h4>
+  <p>These are <b>two separate dimensions</b>. On-path does not mean active; the Week 1 lab sniffer is a <em>passive on-path</em> attacker.</p>
+  <div class="tw"><table>
+    <tr><th>Position</th><th>Meaning</th><th>Passive example</th><th>Active example</th></tr>
+    <tr><td>On-path</td><td>Can observe traffic in transit</td><td>Sniff traffic</td><td>Modify / drop / replay</td></tr>
+    <tr><td>Off-path</td><td>Can send packets but cannot see the path</td><td>Side channel only</td><td>Blind spoofing / injection</td></tr>
+    <tr><td>Endpoint</td><td>Controls a host</td><td>Read local secrets</td><td>Alter application behaviour</td></tr>
+  </table></div>
+  <h4>Dolev–Yao (symbolic) model: “perfect crypto, hostile network”</h4>
+  <ul>
+    <li>The attacker controls the network: <b>read, block, delay, reorder, replay, inject, modify, impersonate</b>.</li>
+    <li>Cryptography is treated as ideal: seeing <code>Enc_K(M)</code> without <code>K</code> reveals nothing; with <code>K</code> she can decrypt. She can pair known terms <code>(A,B)</code> and split pairs.</li>
+    <li>Purpose: find <b>protocol logic flaws</b> (replay, missing authentication, state mistakes) even with perfect primitives. It does <em>not</em> mean the attacker can break AES.</li>
+  </ul>
+  <p><b>Replay</b> is the cleanest example <span class="t">T3</span>: Eve resends yesterday’s <code>Enc_K("transfer 100")</code>. She never decrypts it, yet the protocol fails if it accepts stale messages. Freshness needs <b>nonces, sequence numbers, timestamps or state</b>.</p>
+  <h4>Computational model</h4>
+  <ul>
+    <li>Efficient attacker = <b>PPT</b> (probabilistic polynomial time) algorithm.</li>
+    <li><b>Security game</b>: challenger picks hidden bit <code>b ∈ {0,1}</code>, adversary outputs guess <code>b′</code>. Guessing alone wins half the time, so <span class="m">Adv = |Pr[b′ = b] − 1/2|</span>. The IND-CPA game in <a class="xref" href="#s2-6">§2.6</a> is the concrete version.</li>
+    <li><b>Negligible</b>: eventually smaller than <code>1/λ^c</code> for every constant c. So <code>2^−λ</code> is negligible; <code>1/λ</code> and even <code>1/λ^100</code> are <b>not</b>.</li>
+  </ul>
+  <div class="tw"><table>
+    <tr><th></th><th>Dolev–Yao / symbolic</th><th>Computational</th></tr>
+    <tr><td>Messages</td><td>Symbolic terms</td><td>Bit strings</td></tr>
+    <tr><td>Crypto</td><td>Idealized constructors</td><td>Algorithms</td></tr>
+    <tr><td>Attacker</td><td>Network derivation rules</td><td>Efficient probabilistic algorithm</td></tr>
+    <tr><td>Main question</td><td>Does protocol logic allow an attack?</td><td>Can an efficient attacker gain advantage?</td></tr>
+    <tr><td>Useful for</td><td>Protocol flaws</td><td>Security definitions and proofs</td></tr>
+  </table></div>
+
+  <div class="lab" id="s1-lab">
+    <p><b>Week 1 lab: make the passive attacker real.</b> Three processes (<code>server.py</code>, <code>client.py</code>, <code>sniffer.py</code>); the sniffer parses raw frames and finds a plaintext credential. Attacker model: passive observer. Violated property: confidentiality of credentials. Reference tools: tcpdump, Wireshark.</p>
+    <p>Parsing chain: <b>Ethernet</b> (14 bytes: dst MAC 6, src MAC 6, EtherType 2; <code>0x0800</code> = IPv4) → <b>IPv4</b> (header length = <code>IHL × 4</code> bytes; protocol <code>6</code> = TCP, <code>17</code> = UDP) → <b>TCP</b> (ports; seq/ACK; flags SYN/ACK/FIN/RST; <b>data offset</b> says where the payload starts) → payload search for <code>USER</code>, <code>PASS</code>, <code>password=</code>, <code>token=</code>. Raw <code>AF_PACKET</code> capture needs Linux/WSL2 and often sudo.</p>
+    <p>Ethics: only instructor-provided traffic in the isolated lab.</p>
+  </div>
+</section>
+
+<!-- ============ 2 ============ -->
+<section class="part" id="s2">
+  <div class="part-head"><div><span class="eyebrow">Week 2 · lecture + lab</span><h2>2 · Symmetric crypto</h2></div>
+  <label class="done"><input type="checkbox" id="done-s2" data-sec="s2"> studied</label></div>
+
+  <h3 id="s2-1"><span class="sn">2.1</span>What encryption does and does not give</h3>
+  <p>Encryption primarily gives <b>confidentiality</b>. It does not automatically give integrity, authentication, freshness or availability <span class="t">T3</span>. Even with <code>Enc_K("PAY 100")</code> the ciphertext can be modified, the wrong peer can be authenticated, an old ciphertext can be replayed, or an endpoint can be compromised. For the message <code>MEET AT 10</code>: confidentiality asks “can Eve read it?”, integrity asks “can Eve change it to 11 undetected?”, authentication asks “does Bob know who sent it?”. <b>Authenticated encryption</b> aims for confidentiality and integrity together <a class="xref" href="#s2-5">§2.5</a>.</p>
+  <p class="key">Unreadable data can still be malleable. Confidentiality does not imply integrity.</p>
+
+  <h3 id="s2-2"><span class="sn">2.2</span>Perfect secrecy and the one-time pad</h3>
+  <p><b>Perfect secrecy</b>: seeing the ciphertext gives no information about the plaintext, even to an attacker with unlimited computation.</p>
+  <span class="f">Pr[M = m | C = c] = Pr[M = m]        OTP: C = M ⊕ K,  M = C ⊕ K  (since K ⊕ K = 0)</span>
+  <p>It works because for every candidate plaintext of the same length there is a key that maps it to the observed C, so no plaintext is favoured. Example: <code>M=10110010</code>, <code>K=01101001</code> gives <code>C=11011011</code>.</p>
+  <p><b>Four requirements</b>: the key is truly random, at least as long as the message, kept secret, and <b>never reused</b>. These kill it for Internet traffic: a 10 GB file needs 10 GB of pre-shared key, and if you can deliver that key securely you have nearly solved the original problem (key distribution).</p>
+  <p><b>Reuse is catastrophic</b> <span class="t">T5</span>:</p>
+  <span class="f">C₁ ⊕ C₂ = (M₁ ⊕ K) ⊕ (M₂ ⊕ K) = M₁ ⊕ M₂</span>
+  <p>The key cancels and the attacker learns a direct relationship between plaintexts. The same failure returns in CTR mode <a class="xref" href="#s2-5">§2.5</a>.</p>
+
+  <h3 id="s2-3"><span class="sn">2.3</span>Computational security</h3>
+  <p>Practical cryptography relaxes “unlimited attacker learns nothing” to “no <b>efficient</b> (PPT, <a class="xref" href="#s1-3">§1.3</a>) attacker gains meaningful advantage”, which allows a <b>short, reusable</b> key. AES is not claimed mathematically unbreakable; the claim is <em>practical infeasibility when used correctly</em>. Symmetric correctness: <code>Dec_K(Enc_K(M)) = M</code>; Week 2 assumes K already exists (key establishment is <a class="xref" href="#s3-4">§3.4</a>).</p>
+
+  <h3 id="s2-4"><span class="sn">2.4</span>Block ciphers and AES</h3>
+  <ul>
+    <li>A <b>block cipher</b> maps fixed-size blocks; AES block = <b>128 bits = 16 bytes</b>, always. It does not say how to encrypt a 1 MB file; that is the job of a <b>mode</b>.</li>
+    <li>Under a fixed key it must be a <b>permutation</b> (one-to-one), or decryption would be ambiguous.</li>
+    <li><b>PRP</b> (pseudorandom permutation): without K, the keyed bijection should be computationally indistinguishable from a random permutation. AES is not random; it is designed to look random.</li>
+  </ul>
+  <div class="tw"><table>
+    <tr><th>Variant</th><th>Key</th><th>Rounds</th></tr>
+    <tr><td>AES-128</td><td class="num">128 bits</td><td class="num">10</td></tr>
+    <tr><td>AES-192</td><td class="num">192 bits</td><td class="num">12</td></tr>
+    <tr><td>AES-256</td><td class="num">256 bits</td><td class="num">14</td></tr>
+  </table></div>
+  <p>The 16 bytes form a <b>4 × 4 state</b>. After an initial AddRoundKey, each round applies:</p>
+  <div class="tw"><table>
+    <tr><th>Step</th><th>What it does</th><th>Role</th></tr>
+    <tr><td>SubBytes</td><td>Each byte through the S-box; <b>nonlinear</b>, so the cipher is not one big solvable linear system</td><td>Confusion</td></tr>
+    <tr><td>ShiftRows</td><td>Row r cyclically shifted by r (0, 1, 2, 3)</td><td>Diffusion</td></tr>
+    <tr><td>MixColumns</td><td>Finite-field mixing inside each column; <b>omitted in the final round</b></td><td>Diffusion</td></tr>
+    <tr><td>AddRoundKey</td><td><code>State ← State ⊕ RoundKey</code>; round keys derived from the main key</td><td>Injects the secret</td></tr>
+  </table></div>
+  <p><b>Confusion</b> (Shannon): make the key–ciphertext relationship complex. <b>Diffusion</b>: spread each plaintext bit’s influence across the ciphertext. Together they give the <b>avalanche</b> effect: flip one input bit and, after enough rounds, many output bits change.</p>
+
+  <h3 id="s2-5"><span class="sn">2.5</span>Modes of operation</h3>
+  <p class="key">Security = AES + mode + parameter management. AES is a block cipher; ECB / CBC / CTR / GCM are modes <span class="t">T3</span>.</p>
+  <h4>ECB (Electronic Codebook)</h4>
+  <p><code>Cᵢ = E_K(Pᵢ)</code>, each block independently. AES is deterministic under a fixed key, so <b><code>Pᵢ = Pⱼ ⇒ Cᵢ = Cⱼ</code></b>: equality and structure leak (the ECB image still shows the picture; repeated <code>USER</code> rows stay visible). Unreadable ≠ secure. Do not use ECB for ordinary data.</p>
+  <h4>CBC (Cipher Block Chaining)</h4>
+  <span class="f">C₁ = E_K(P₁ ⊕ IV)      Cᵢ = E_K(Pᵢ ⊕ Cᵢ₋₁)      decrypt: Pᵢ = D_K(Cᵢ) ⊕ Cᵢ₋₁</span>
+  <ul>
+    <li>The <b>IV</b> randomises the first block; it is usually public and sent as <code>IV ‖ C₁ ‖ C₂ ‖ …</code>, but must be generated correctly (unpredictable).</li>
+    <li>Needs <b>padding</b> to whole 16-byte blocks. Distinguishable invalid-padding errors led to <b>padding oracle</b> attacks (reappear in TLS as Lucky13/POODLE, <a class="xref" href="#s6-3">§6.3</a>).</li>
+    <li><b>Malleable</b>: flipping bits in <code>Cᵢ₋₁</code> flips the same bits in <code>Pᵢ</code>. CBC alone ≠ integrity.</li>
+  </ul>
+  <h4>CTR (Counter)</h4>
+  <span class="f">Sᵢ = E_K(N ‖ i)      Cᵢ = Pᵢ ⊕ Sᵢ      Pᵢ = Cᵢ ⊕ Sᵢ</span>
+  <ul>
+    <li>Turns the block cipher into a stream-like cipher: <b>parallelisable</b>, no CBC-style padding (only the needed keystream bytes are used).</li>
+    <li><b>Never reuse a nonce under the same key</b> <span class="t">T5</span>. Same nonce + key ⇒ same keystream ⇒ the OTP failure: <code>C₁ ⊕ C₂ = M₁ ⊕ M₂</code>. If one plaintext is known: <span class="m">M₂ = C₁ ⊕ C₂ ⊕ M₁</span>.</li>
+    <li><b>Malleable</b> even with correct nonces: <code>C′ = C ⊕ Δ ⇒ P′ = P ⊕ Δ</code>. CTR alone is not message authentication.</li>
+  </ul>
+  <h4>GCM / AEAD</h4>
+  <p><b>AEAD</b> = Authenticated Encryption with Associated Data: confidentiality plus integrity in one construction, instead of hand-combining a mode and a MAC. Associated data is metadata that is authenticated but not encrypted. <b>GCM</b> = CTR-like encryption + an authentication tag over the ciphertext and associated data. Output: <code>nonce ‖ ciphertext ‖ tag</code>. Rules: <b>verify the tag before using any plaintext</b>; nonce reuse is also dangerous here. TLS’s use of AEAD is in <a class="xref" href="#s6-3">§6.3</a>.</p>
+  <h4>Key vs IV / nonce</h4>
+  <div class="tw"><table>
+    <tr><th></th><th>Secret?</th><th>Requirement</th></tr>
+    <tr><td>Key K</td><td>Yes, always</td><td>Unpredictable; long-term or session secret</td></tr>
+    <tr><td>IV / nonce</td><td>Usually public is fine</td><td>Must be generated correctly: unique (CTR/GCM) or unpredictable (CBC). <b>Public does not mean arbitrary.</b></td></tr>
+  </table></div>
+  <h4>Mode comparison</h4>
+  <div class="tw"><table>
+    <tr><th>Mode</th><th>Main idea</th><th>Confidentiality pitfall</th><th>Integrity?</th></tr>
+    <tr><td>ECB</td><td>Encrypt blocks independently</td><td>Leaks equality / patterns</td><td class="no">No</td></tr>
+    <tr><td>CBC</td><td>XOR with previous ciphertext + IV</td><td>Bad IV; padding details</td><td class="no">No</td></tr>
+    <tr><td>CTR</td><td>Encrypt nonce‖counter into a keystream</td><td>Nonce reuse</td><td class="no">No</td></tr>
+    <tr><td>GCM / AEAD</td><td>CTR-like + authentication tag</td><td>Nonce misuse; ignored tag</td><td class="yes">Yes, if used correctly</td></tr>
+  </table></div>
+  <div class="trap"><p>Common mistakes: using ECB on structured data; reusing an OTP key, CTR nonce or AEAD nonce under the same key; treating IVs/nonces as secret passwords; assuming CBC or CTR authenticate; decrypting and using data before the tag verifies.</p></div>
+
+  <h3 id="s2-6"><span class="sn">2.6</span>IND-CPA: confidentiality as a game</h3>
+  <ol>
+    <li>The attacker may request encryptions of messages of its choice (chosen-plaintext).</li>
+    <li>It submits two equal-length messages <code>M₀, M₁</code>.</li>
+    <li>The challenger encrypts <code>M_b</code> for a hidden random bit b and returns C.</li>
+    <li>The attacker wins by guessing b better than chance: <span class="m">Adv = |Pr[b′ = b] − 1/2|</span>.</li>
+  </ol>
+  <p><b>ECB fails</b> because it is deterministic and leaks equal blocks (and the attacker can ask for encryptions of the challenge messages). CBC needs <b>unpredictable IVs</b>, CTR needs <b>unique nonces</b>, GCM needs nonce discipline and tag verification to reach the goal.</p>
+
+  <div class="lab">
+    <p><b>Week 2 lab.</b> Implement ECB vs CTR around a library block cipher. (1) Encrypt an image with ECB: pixel values unreadable, structure leaks. (2) Reuse a CTR nonce: XOR two ciphertexts to get <code>M₁ ⊕ M₂</code>, then recover the unknown plaintext from a known one.</p>
+  </div>
+</section>
+
+<!-- ============ 3 ============ -->
+<section class="part" id="s3">
+  <div class="part-head"><div><span class="eyebrow">Week 3 · lecture + lab tutorial</span><h2>3 · Integrity &amp; public key</h2></div>
+  <label class="done"><input type="checkbox" id="done-s3" data-sec="s3"> studied</label></div>
+  <p>Week 2 showed confidentiality is not enough (CTR is malleable). Week 3 asks how to <b>detect modification</b> and how to <b>bind messages and keys to identities</b>.</p>
+
+  <h3 id="s3-1"><span class="sn">3.1</span>Hash functions</h3>
+  <p><code>H : {0,1}* → {0,1}ⁿ</code>: any-length input, fixed n-bit digest. Deterministic (same input → same digest), with avalanche (<code>"hello"</code> vs <code>"Hello"</code> give unrelated digests). Hashing is <b>not encryption</b>; there is no “decrypt the hash”.</p>
+  <div class="tw"><table>
+    <tr><th>Property</th><th>Attacker is given</th><th>Goal</th><th>Generic work (ideal n-bit hash)</th></tr>
+    <tr><td>Preimage (“one-way”)</td><td>digest h</td><td>find m with H(m) = h</td><td class="num">≈ 2ⁿ</td></tr>
+    <tr><td>Second preimage</td><td>message m</td><td>find m′ ≠ m with H(m′) = H(m)</td><td>—</td></tr>
+    <tr><td>Collision</td><td>nothing fixed</td><td>find any m₁ ≠ m₂ with H(m₁) = H(m₂)</td><td class="num">≈ 2ⁿᐟ² (birthday)</td></tr>
+  </table></div>
+  <p><b>Birthday bound</b>: q samples give about <code>q(q−1)/2</code> pairs, so a collision becomes likely once <code>q² ≈ N = 2ⁿ</code>, i.e. <span class="m">q ≈ √(2ⁿ) = 2ⁿᐟ²</span>. Collisions are easier than preimages because the attacker chooses both messages.</p>
+  <div class="trap"><p>A “256-bit hash” does <b>not</b> have 256-bit collision resistance. SHA-256 generic collision security ≈ 2¹²⁸.</p></div>
+  <p><b>A plain hash does not authenticate.</b> If Alice sends <code>"PAY BOB 100", H(msg)</code>, Eve changes the message to <code>"PAY EVE 900"</code> and recomputes the hash; the algorithm is public. The receiver needs a <b>secret-dependent</b> tag. Hence MACs.</p>
+
+  <h3 id="s3-2"><span class="sn">3.2</span>MACs, length extension, HMAC</h3>
+  <p>A <b>MAC</b> takes a secret key and a message and outputs a tag <code>t = MAC_K(m)</code>; the receiver recomputes it with the same key. Valid tag ⇒ <b>integrity + shared-key data-origin authentication</b> (“someone holding K made this”). A MAC gives <b>no confidentiality</b>: m may be plaintext. Encryption-only is the mirror image: unreadable but modifiable.</p>
+  <h4>The tempting construction: <code>tag = H(K ‖ m)</code></h4>
+  <p>With a <b>Merkle–Damgård</b> hash (SHA-1, SHA-256), the digest is the final internal chaining state. An attacker who sees <code>m</code> and <code>H(K ‖ m)</code> can keep hashing from that state:</p>
+  <ol>
+    <li>Guess the secret length <code>len(K)</code> (try plausible values).</li>
+    <li>Compute the <b>glue padding</b> the hash would have added to <code>K ‖ m</code>.</li>
+    <li>Continue hashing a chosen suffix from the published digest.</li>
+    <li>Forged message <code>m ‖ padding ‖ &amp;admin=true</code> with a valid forged tag.</li>
+  </ol>
+  <div class="tw"><table>
+    <tr><th>The attack does NOT need</th><th>It actually exploits</th></tr>
+    <tr><td>Recovering K · finding a collision · inverting the hash · breaking the compression function</td><td>The visible digest as a continuation state · the known original message · a correct key-length guess · the unsafe design H(K‖m)</td></tr>
+  </table></div>
+  <p class="key">Length extension is a construction failure: secure primitive + unsafe composition = insecure system <span class="t">T3</span>.</p>
+  <h4>HMAC: the standard fix</h4>
+  <span class="f">HMAC(K, m) = H( (K′ ⊕ opad) ‖ H( (K′ ⊕ ipad) ‖ m ) )</span>
+  <p>The visible tag is the <b>outer</b> hash, not the state after hashing <code>K ‖ m</code>, so the length-extension strategy no longer applies. Use the library: <code>hmac.new(key, msg, hashlib.sha256)</code>, and verify with <b><code>hmac.compare_digest</code></b> (constant time), never <code>==</code>. Do not design your own MAC.</p>
+
+  <h3 id="s3-3"><span class="sn">3.3</span>Public-key crypto and RSA</h3>
+  <p>HMAC assumes a shared secret already exists. Public-key crypto adds a key pair: the <b>public key</b> is distributed widely (verify / encrypt roles) and the <b>private key</b> stays secret (sign / decrypt roles). <b>Public does not mean trusted</b>: binding the key to an identity is a separate problem (<a class="xref" href="#s3-5">§3.5</a>).</p>
+  <span class="f">RSA: n = p·q   public (n, e)   private d     c = mᵉ mod n     m = c^d mod n</span>
+  <p>The trapdoor is tied to factoring n: with p and q you can build d; given only a large n, factoring is assumed infeasible for classical attackers. <b>Textbook RSA</b> is deterministic and structurally unsafe. Encryption needs randomized padding (<b>OAEP</b>); signatures need proper encoding (<b>RSA-PSS</b>). The primitive is not the protocol <span class="t">T3</span>.</p>
+
+  <h3 id="s3-4"><span class="sn">3.4</span>Diffie–Hellman and the man-in-the-middle</h3>
+  <span class="f">Alice: secret a, sends A = gᵃ mod p      Bob: secret b, sends B = gᵇ mod p      shared: Bᵃ ≡ Aᵇ ≡ gᵃᵇ mod p</span>
+  <p>A passive observer sees <code>p, g, A, B</code> and should not be able to recover a, b or <code>gᵃᵇ</code> (discrete-log-style hardness, with properly chosen parameters; the lab’s <code>p = 23, g = 5</code> are toys). <b>DH is key agreement, not authentication.</b> Neither side gets proof of who sent the value it received.</p>
+  <figure>
+    <div class="dg">
+    <svg viewBox="0 0 640 250" role="img" aria-labelledby="mitmT">
+      <title id="mitmT">Raw Diffie–Hellman man-in-the-middle: Eve substitutes her own public values and ends up with one key shared with Alice and another shared with Bob.</title>
+      <defs>
+        <marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="d-head"/></marker>
+        <marker id="ahw" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="d-head warn"/></marker>
+      </defs>
+      <rect x="30" y="10" width="100" height="32" rx="6" class="d-box"/><text x="80" y="31" text-anchor="middle" class="d-tb">Alice</text>
+      <rect x="270" y="10" width="100" height="32" rx="6" class="d-eve"/><text x="320" y="31" text-anchor="middle" class="d-tb">Eve</text>
+      <rect x="510" y="10" width="100" height="32" rx="6" class="d-box"/><text x="560" y="31" text-anchor="middle" class="d-tb">Bob</text>
+      <line x1="80" y1="42" x2="80" y2="200" class="d-life"/><line x1="320" y1="42" x2="320" y2="200" class="d-life"/><line x1="560" y1="42" x2="560" y2="200" class="d-life"/>
+      <line x1="82" y1="72" x2="316" y2="72" class="d-arrow" marker-end="url(#ah)"/><text x="200" y="64" text-anchor="middle" class="d-t">① A = gᵃ (meant for Bob)</text>
+      <line x1="322" y1="107" x2="556" y2="107" class="d-arrow warn" marker-end="url(#ahw)"/><text x="440" y="99" text-anchor="middle" class="d-t">② E₁ = g^e₁ “from Alice”</text>
+      <line x1="558" y1="142" x2="324" y2="142" class="d-arrow" marker-end="url(#ah)"/><text x="440" y="134" text-anchor="middle" class="d-t">③ B = gᵇ (meant for Alice)</text>
+      <line x1="318" y1="177" x2="84" y2="177" class="d-arrow warn" marker-end="url(#ahw)"/><text x="200" y="169" text-anchor="middle" class="d-t">④ E₂ = g^e₂ “from Bob”</text>
+      <text x="80" y="222" text-anchor="middle" class="d-ta">K_AE = g^(a·e₂)</text>
+      <text x="320" y="222" text-anchor="middle" class="d-tw">knows K_AE and K_EB</text>
+      <text x="560" y="222" text-anchor="middle" class="d-ta">K_EB = g^(b·e₁)</text>
+      <text x="320" y="242" text-anchor="middle" class="d-tm">Eve decrypts with K_AE, reads, re-encrypts with K_EB</text>
+    </svg>
+    </div>
+    <figcaption>Eve runs two honest DH exchanges. In the lab output, Alice and Eve print one secret (e.g. 7), Bob and Eve another (e.g. 19).</figcaption>
+  </figure>
+  <p class="key">Eve did not solve the discrete logarithm. Encryption did not fail. The missing property is <b>authentication of the DH exchange</b> <span class="t">T4</span>. Alice and Bob both “succeed” and are still insecure.</p>
+  <p><b>Fix</b>: bind the exchange to identities. The server’s certificate proves its public key; the server <b>signs the key-exchange transcript</b>; the client verifies identity + DH values. The certificate does not “encrypt the session”; it authenticates who owns the key that signed the exchange. TLS 1.3 does exactly this in <a class="xref" href="#s6-6">§6.6</a>; OpenSSH does it with host keys (lab Part C below).</p>
+
+  <h3 id="s3-5"><span class="sn">3.5</span>Signatures, certificates and choosing the right primitive</h3>
+  <p><b>Digital signature</b>: <code>σ = Sign(SK_A, m)</code>, checked with <code>Verify(PK_A, m, σ)</code>. Anyone with the public key can verify; only the private-key holder can sign.</p>
+  <div class="tw"><table>
+    <tr><th>Primitive</th><th>Secret</th><th>Integrity</th><th>Origin authentication</th><th>Publicly / third-party verifiable</th></tr>
+    <tr><td>Hash</td><td>None</td><td>Accidental change / fingerprint only</td><td class="no">No</td><td>Anyone can recompute (so it proves nothing about origin)</td></tr>
+    <tr><td>MAC / HMAC</td><td>Shared key</td><td class="yes">Yes</td><td>Only within the key-sharing group</td><td class="no">No: Bob could have made the tag himself, so no non-repudiation</td></tr>
+    <tr><td>Signature</td><td>Private signing key</td><td class="yes">Yes</td><td class="yes">Yes</td><td class="yes">Yes, assuming the key binding is trustworthy</td></tr>
+  </table></div>
+  <p><b>Whose public key is it?</b> If Eve hands Bob “Alice’s public key”, possession of a key is not identity, and MITM remains possible. A <b>certificate</b> is a signed statement binding <b>subject</b> (e.g. example.com) + <b>public key</b> + metadata (validity, issuer), made useful by the <b>issuer’s signature</b>.</p>
+  <p><b>Chain of trust</b>: Trusted Root CA → Intermediate CA → Server certificate. The client trusts root public keys in its <b>trust store</b>; each CA signs the certificate below it. (TLS’s Certificate message: <a class="xref" href="#s6-5">§6.5</a>. DNSSEC builds the same idea along the DNS tree: <a class="xref" href="#s5-7">§5.7</a>.)</p>
+
+  <h3 id="s3-6"><span class="sn">3.6</span>Forward secrecy</h3>
+  <p>The recorded-traffic problem: an attacker records ciphertext today and steals the server’s long-term key years later. Without forward secrecy, old sessions may be decrypted. With it, old session keys stay unavailable.</p>
+  <p>Mechanism: <b>ephemeral DH</b>. Fresh DH exponents per session derive the session key and are <b>erased after use</b>. The long-term signing key only <em>authenticates</em> the DH transcript, so stealing it later does not reveal old ephemeral secrets.</p>
+  <p class="key">Modern protocols compose: certificates for long-term identity, ephemeral DH for session secrets, signatures/MACs to bind the handshake transcript, AEAD for application data. The security comes from the composition.</p>
+
+  <h3 id="s3-7"><span class="sn">3.7</span>Randomness</h3>
+  <p>Keys (unpredictable), nonces (often unique), IVs (unique or unpredictable), DH exponents (secret, unpredictable), signature nonces (must not repeat or be predictable), session tokens (unguessable) all depend on it <span class="t">T5</span>.</p>
+  <div class="tw"><table>
+    <tr><th>General PRNG</th><th>CSPRNG</th></tr>
+    <tr><td>For simulation/statistics; may be predictable from its state. Example: Python <code>random</code>.</td><td>Computationally unpredictable, backed by OS entropy. Use <code>secrets.token_bytes(32)</code> or a crypto library for keys and tokens.</td></tr>
+  </table></div>
+  <ul>
+    <li><b>Debian OpenSSL</b>: a packaging change reduced key-generation entropy; keys came from a small, enumerable space. Strong math, catastrophically weak keys. The implementation environment is part of the security system.</li>
+    <li><b>Nonce reuse</b>: repeating a nonce under the same key in CTR/GCM-style modes repeats keystream or breaks authentication; repeated or predictable signature nonces can also break signature schemes.</li>
+  </ul>
+
+  <div class="lab" id="s3-lab">
+    <p><b>Week 3 lab: the same lesson three times (primitive ≠ protocol).</b></p>
+    <p><b>Part A, MAC forgery.</b> <code>naive_mac_server.py</code> uses <code>sha1(SECRET + message)</code>. The attacker sees <code>user=alice&amp;action=view</code> and its 40-hex-char tag, loops over guessed secret lengths (4–32) with the supplied <code>sha1_length_extension</code> helper, and gets <code>…&amp;admin=true</code> accepted (correct guess: 16). Switching to <code>hmac_server.py</code> (HMAC-SHA256): the same strategy is rejected. The attacker never learned the key, found a collision or inverted the hash. Tip: use bytes, copy the full tag, compare with <code>compare_digest</code>.</p>
+    <p><b>Part B, DH MITM.</b> Bob listens on <code>127.0.0.1:9001</code>; direct Alice → Bob gives equal secrets. Then <code>mitm.py</code> listens on <code>9000</code> (server to Alice, client to Bob). Start order: Bob, then Eve, then Alice. Result: Alice ≠ Bob, Eve knows both (diagram above). Optional: XOR-“encrypt” <code>MEET AT 10</code> with <code>secret % 256</code>; Eve decrypts, reads, re-encrypts.</p>
+    <p><b>Part C, OpenSSH.</b> OpenSSH is not raw DH: it negotiates a key-exchange algorithm, <b>authenticates the server with a host key</b> remembered in <code>known_hosts</code>, then authenticates the user (password or public key). In <code>ssh -vvv</code> output find: <code>kex: algorithm</code>, <code>kex: host key algorithm</code>, <code>Server host key: … SHA256:…</code>, <code>Authenticated to localhost</code>. On first connection you accept the fingerprint (trust on first use); afterwards a <b>changed host key triggers a possible-MITM warning</b>. Never “fix” that with <code>StrictHostKeyChecking=no</code>.</p>
+    <div class="tw"><table>
+      <tr><th></th><th>Raw DH</th><th>OpenSSH</th></tr>
+      <tr><td>What is exchanged</td><td>A, B only</td><td>KEX + host key</td></tr>
+      <tr><td>Eve replaces public values</td><td>MITM works</td><td>Host key checked against <code>known_hosts</code>; warning if changed</td></tr>
+    </table></div>
+  </div>
+</section>
+
+<!-- ============ 4 ============ -->
+<section class="part" id="s4">
+  <div class="part-head"><div><span class="eyebrow">Week 4 · lecture</span><h2>4 · HTTP &amp; sessions</h2></div>
+  <label class="done"><input type="checkbox" id="done-s4" data-sec="s4"> studied</label></div>
+  <p>Core question: after the user logs in once, <b>what authenticates the next HTTP request?</b> Main claim: if a network attacker can read a bearer session token, they may not need the password any more.</p>
+
+  <h3 id="s4-1"><span class="sn">4.1</span>HTTP on the wire</h3>
+  <p>For security, treat HTTP as structured text-like bytes over a TCP connection, which a browser, curl, a Python socket or a proxy can all produce.</p>
+  <pre>POST /login HTTP/1.1                         ← request line: METHOD SP TARGET SP VERSION
+Host: localhost                              ← headers (CRLF line endings)
+Content-Type: application/x-www-form-urlencoded
+Content-Length: 29                           ← how many body bytes to read
+                                             ← empty line: end of headers
+username=alice&amp;password=week4                ← body
+
+HTTP/1.1 200 OK                              ← status line
+Set-Cookie: session=abc123                   ← server sets state
+Content-Length: 13
+
+Hello, Alice!</pre>
+  <ul>
+    <li>Security-relevant headers: <code>Host</code>, <code>Cookie</code>, <code>Authorization</code>, <code>Content-Type</code>, <code>Content-Length</code>. The key one this week is <code>Cookie: session=…</code>.</li>
+    <li>Status families: 2xx success, 3xx redirect, 4xx client problem, 5xx server problem (200, 302, 401, 403, 404). <b>A status code is not security</b>: the application’s authorization logic decides which one to return.</li>
+    <li><b>GET</b> usually asks for a resource (but still carries sensitive headers like Cookie). <b>POST</b> usually submits a body.</li>
+  </ul>
+  <div class="trap"><p><b>“POST hides data” is false.</b> Over plaintext HTTP a passive observer reads the POST body like any other bytes. Transport protection is what matters.</p></div>
+
+  <h3 id="s4-2"><span class="sn">4.2</span>Statelessness and sessions</h3>
+  <p>HTTP requests are conceptually independent; even on a persistent TCP connection the protocol does not remember who you are. After <code>POST /login</code>, how does <code>GET /profile</code> prove it is still Alice? The application adds a <b>session</b>:</p>
+  <ol>
+    <li>Client → server: username / password.</li>
+    <li>Server verifies, generates a random token S, stores <code>sessions[S] = {user: "alice", role: "user", …}</code>.</li>
+    <li>Server → client: <code>Set-Cookie: session=S</code>.</li>
+    <li>Later requests: <code>Cookie: session=S</code>; server looks up S → Alice.</li>
+  </ol>
+  <p>The token is small; the authority attached to it can be large. <b>Server-side session</b>: cookie holds a random ID, server holds the record. <b>Client-side token</b>: the token carries claims itself (e.g. signed tokens) and still needs confidentiality and verification rules.</p>
+
+  <h3 id="s4-3"><span class="sn">4.3</span>Bearer tokens and session hijacking</h3>
+  <p class="key">Bearer model: whoever bears the token can use it. Possession is enough <span class="t">T7</span>.</p>
+  <p>Examples beyond cookies: API keys, OAuth access tokens, password-reset links, temporary download links, magic-login URLs. The <b>password</b> establishes identity once; the <b>session cookie</b> authenticates every later request until expiry or logout, so it becomes the practical target.</p>
+  <p><b>Session hijacking</b>: Eve observes <code>Cookie: session=7a09cdef</code>, sends her own request with the same cookie, and the server maps it to Alice. Eve never needed the password.</p>
+  <p><b>Properties cascade</b> <span class="t">T2</span>: exposing the cookie violates <em>confidentiality</em>; reusing it violates <em>session authentication</em>; modifying traffic violates <em>integrity</em>; a DoS violates <em>availability</em>. The password can stay secret while the session is hijacked.</p>
+  <h4>Read → replay → tamper</h4>
+  <div class="tw"><table>
+    <tr><th>Stage</th><th>Attacker</th><th>Property violated</th></tr>
+    <tr><td>Read the cookie from plaintext HTTP</td><td>Passive on-path observer (may be hard to detect)</td><td>Confidentiality</td></tr>
+    <tr><td>Replay it in a new request</td><td>Now active</td><td>Authentication (session)</td></tr>
+    <tr><td>Rewrite requests/responses as an interception proxy (e.g. mitmproxy; <code>Balance: 1000</code> → <code>0000</code>)</td><td>Active intermediary: replay, drop, redirect, rewrite</td><td>Integrity, authentication, availability</td></tr>
+  </table></div>
+  <p><b>Model answer</b> (Eve sees <code>Cookie: session=S</code> over HTTP): asset = session token; required property = confidentiality; attacker = passive on-path observer; initial violation = information disclosure; consequence = session hijacking when replayed; replay = active use of a stolen bearer credential.</p>
+
+  <h3 id="s4-4"><span class="sn">4.4</span>Cookie attributes</h3>
+  <p>Browser-enforced rules that reduce specific risks. They do not replace TLS, authorization checks or session design.</p>
+  <div class="tw"><table>
+    <tr><th>Attribute</th><th>What it does</th><th>What it does not do</th></tr>
+    <tr><td><code>Secure</code></td><td>Browser sends the cookie only over HTTPS: transport confidentiality for the cookie</td><td>Not “secret” by itself; depends on correct HTTPS use</td></tr>
+    <tr><td><code>HttpOnly</code></td><td>Ordinary JavaScript cannot read it via <code>document.cookie</code>; blocks some XSS cookie theft</td><td>Browser still sends it automatically; injected script can still act as the user; no fix for server authorization bugs</td></tr>
+    <tr><td><code>SameSite</code> (Strict / Lax / None)</td><td>Controls whether cookies accompany cross-site requests (CSRF-style risk)</td><td>CSRF itself is app security, outside this week’s focus</td></tr>
+    <tr><td><code>Path</code> / <code>Domain</code></td><td>Limit which paths / hostnames receive the cookie</td><td>—</td></tr>
+    <tr><td><code>Expires</code> / <code>Max-Age</code></td><td>Persistence lifetime; long-lived cookies make theft more valuable</td><td>A token stays dangerous as long as the <em>server</em> accepts it</td></tr>
+  </table></div>
+
+  <h3 id="s4-5"><span class="sn">4.5</span>Session lifecycle</h3>
+  <ul>
+    <li><b>Generate</b> with a CSPRNG (<a class="xref" href="#s3-7">§3.7</a>): long, unguessable, bound to server-side validity state <span class="t">T5</span>.</li>
+    <li><b>Rotate after login</b> and privilege changes. Otherwise <b>session fixation</b>: the attacker plants a known session ID before authentication and it becomes authenticated. Do not let the attacker choose the token that later becomes authenticated.</li>
+    <li><b>Invalidate server-side on logout</b>. Deleting the cookie on the client is not enough if the server still accepts it.</li>
+    <li><b>Limit lifetime and scope</b>. Short lifetimes reduce exposure but cost usability. (Design question: what happens to all active sessions after a password change?)</li>
+    <li>Transmit authenticated sessions only over HTTPS; set <code>Secure</code> and <code>HttpOnly</code>; avoid mixed HTTP/HTTPS session behaviour; consider <b>HSTS</b> against downgrade or accidental HTTP; keep authorization separate from authentication.</li>
+  </ul>
+  <p class="key">A cookie is protected in transit only if the browser never sends it over an exposed channel. Session security is a system, not a single header.</p>
+
+  <h3 id="s4-6"><span class="sn">4.6</span>What HTTPS fixes and what it does not</h3>
+  <p><b>HTTPS = HTTP carried over TLS</b> (HTTP → TLS → TCP → IP). Cookies are inside HTTP, so TLS protects them in transit.</p>
+  <div class="tw"><table>
+    <tr><th>Correct HTTPS helps provide</th><th>HTTPS does not prevent <span class="t">T6</span></th></tr>
+    <tr><td>Confidentiality of headers and body · integrity in transit · server authentication through certificate validation · protection against simple on-path cookie theft</td><td>XSS · SQL injection · broken authorization · malicious browser extensions · endpoint malware · server compromise · weak session lifecycle design</td></tr>
+  </table></div>
+  <p>Assumptions: certificates are validated, endpoints are not compromised, and the application uses HTTPS consistently. If the client skips certificate validation, an active attacker can impersonate the server: HTTPS relies on <b>authenticated</b> TLS, not just encryption <span class="t">T4</span>.</p>
+  <p><b>Scope boundary.</b> HTTP transports requests; the application decides whether each one is allowed (a valid cookie means “this request belongs to session S”, not “every action is permitted”). <b>XSS</b> = attacker script running in the victim’s browser context; it shows session theft is not only sniffing. <b>SQL injection</b> = unsafe query construction from input (HTTP input → app → database); not a network interception problem.</p>
+  <div class="tw"><table>
+    <tr><th>Network security angle</th><th>Application security angle</th></tr>
+    <tr><td>What can an on-path attacker read, replay or modify? What does TLS protect? Which credentials move over the channel?</td><td>Does the app validate input? Enforce authorization? Protect sessions inside the browser and server?</td></tr>
+  </table></div>
+  <div class="trap"><p>Three misconceptions: “POST hides data” (transport matters) · “the password is safe, so the session is safe” (session cookies are credentials) · “HTTPS fixes web security” (it protects the channel, not app logic). Use precise property language, not “the site got hacked”.</p></div>
+</section>
+
+<!-- ============ 5 ============ -->
+<section class="part" id="s5">
+  <div class="part-head"><div><span class="eyebrow">Week 5 · self-study deck</span><h2>5 · DNS</h2></div>
+  <label class="done"><input type="checkbox" id="done-s5" data-sec="s5"> studied</label></div>
+  <p>Applications use names; packets need addresses. If the DNS answer changes, the device connects to a different machine and the application code never notices. Web, email (MX), APIs, CDNs, certificate issuance checks and monitoring all depend on it. DNS was designed in the 1980s without security.</p>
+
+  <h3 id="s5-1"><span class="sn">5.1</span>The tree, the actors and a lookup</h3>
+  <ul>
+    <li><b>Namespace tree</b>: root <code>.</code> → TLD (<code>com</code>, <code>tr</code>) → domain/zone (<code>example.com</code>) → host (<code>www.example.com</code>). Responsibility is split by <b>delegation</b>: no single server knows every answer. Trust is split too: root → TLD → operator; a false link redirects everything below it.</li>
+    <li><b>Zone</b>: the part of the tree one operator manages, served by its <b>authoritative servers</b>.</li>
+    <li><b>Stub resolver</b>: minimal client in your OS; forwards questions. <b>Recursive resolver</b> (ISP, campus, 1.1.1.1): does the full search and <b>caches</b>. Shared by many users, so it is the high-value target.</li>
+    <li><b>Root / TLD servers</b> mostly give <b>referrals</b> (“ask these servers next”).</li>
+  </ul>
+  <figure>
+    <div class="dg">
+    <svg viewBox="0 0 640 220" role="img" aria-labelledby="dnsT">
+      <title id="dnsT">DNS resolution path: the stub asks the recursive resolver, which asks root, then the TLD, then the authoritative server, caches the answer and replies.</title>
+      <defs>
+        <marker id="ah2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="d-head"/></marker>
+      </defs>
+      <rect x="14" y="88" width="120" height="44" rx="6" class="d-box"/><text x="74" y="108" text-anchor="middle" class="d-tb">Stub</text><text x="74" y="124" text-anchor="middle" class="d-tm">your OS</text>
+      <rect x="216" y="80" width="168" height="60" rx="6" class="d-box"/><text x="300" y="104" text-anchor="middle" class="d-tb">Recursive resolver</text><text x="300" y="122" text-anchor="middle" class="d-tm">cache (TTL)</text>
+      <rect x="470" y="14" width="156" height="40" rx="6" class="d-box"/><text x="548" y="39" text-anchor="middle" class="d-tb">Root  “.”</text>
+      <rect x="470" y="90" width="156" height="40" rx="6" class="d-box"/><text x="548" y="115" text-anchor="middle" class="d-tb">TLD  .com</text>
+      <rect x="470" y="166" width="156" height="40" rx="6" class="d-box"/><text x="548" y="186" text-anchor="middle" class="d-tb">Authoritative</text><text x="548" y="200" text-anchor="middle" class="d-tm">example.com zone</text>
+      <line x1="136" y1="100" x2="212" y2="100" class="d-arrow" marker-end="url(#ah2)"/>
+      <line x1="212" y1="122" x2="138" y2="122" class="d-arrow" marker-end="url(#ah2)"/>
+      <line x1="386" y1="92" x2="466" y2="36" class="d-arrow" marker-start="url(#ah2)" marker-end="url(#ah2)"/>
+      <line x1="386" y1="110" x2="466" y2="110" class="d-arrow" marker-start="url(#ah2)" marker-end="url(#ah2)"/>
+      <line x1="386" y1="128" x2="466" y2="184" class="d-arrow" marker-start="url(#ah2)" marker-end="url(#ah2)"/>
+      <circle cx="174" cy="88" r="10" class="d-dot"/><text x="174" y="92" text-anchor="middle" class="d-dott">1</text>
+      <circle cx="430" cy="52" r="10" class="d-dot"/><text x="430" y="56" text-anchor="middle" class="d-dott">2</text>
+      <circle cx="430" cy="96" r="10" class="d-dot"/><text x="430" y="100" text-anchor="middle" class="d-dott">3</text>
+      <circle cx="430" cy="168" r="10" class="d-dot"/><text x="430" y="172" text-anchor="middle" class="d-dott">4</text>
+      <circle cx="174" cy="138" r="10" class="d-dot"/><text x="174" y="142" text-anchor="middle" class="d-dott">5</text>
+    </svg>
+    </div>
+    <figcaption>① “www.example.com?” with RD set · ② root: “ask .com” · ③ .com: “ask ns1.example.net” · ④ authoritative: <code>A 192.0.2.20</code> · ⑤ answer to stub, cached for its TTL. Every outbound query (②–④) is a window in which a forged reply could arrive first.</figcaption>
+  </figure>
+  <p><b>Recursive vs iterative</b>: the client sends a <em>recursive</em> query (“get me the final answer”, flag <b>RD</b>; server advertises <b>RA</b>). The resolver resolves <em>iteratively</em>, following referrals hop by hop. Both happen in one lookup, at different hops; “DNS is recursive” alone is incomplete.</p>
+
+  <h3 id="s5-2"><span class="sn">5.2</span>Records, caching and TTL</h3>
+  <p>A <b>resource record</b> = <code>NAME TYPE CLASS TTL RDATA</code>, e.g. <code>www 300 IN A 192.0.2.20</code>. The security question for every record: <b>who is authorised to assert this?</b> Classic DNS has no cryptographic way to check.</p>
+  <div class="tw"><table>
+    <tr><th>Type</th><th>Code</th><th>Meaning</th><th>Security note</th></tr>
+    <tr><td>A</td><td class="num">1</td><td>Name → IPv4 (4-byte RDATA)</td><td>Several A records = one RRset (load balancing)</td></tr>
+    <tr><td>AAAA</td><td class="num">28</td><td>Name → IPv6 (16-byte RDATA)</td><td>Clients often ask A and AAAA: two replies to forge</td></tr>
+    <tr><td>CNAME</td><td class="num">5</td><td>Alias for another (canonical) name</td><td>Trust extends to the other zone; dangling CNAME → subdomain takeover</td></tr>
+    <tr><td>NS</td><td class="num">2</td><td>Authoritative servers for a zone = delegation</td><td>Poisoning NS hijacks the whole zone, not one host</td></tr>
+    <tr><td>MX</td><td class="num">15</td><td>Mail server for the domain</td><td>Poisoned MX intercepts email</td></tr>
+    <tr><td>TXT</td><td class="num">16</td><td>Free-form text</td><td>Abused to carry tunnel data back <a class="xref" href="#s5-6">§5.6</a></td></tr>
+  </table></div>
+  <p><b>Glue records</b>: addresses of name servers supplied in the additional section of a referral (needed when ns1.example.com lives inside the zone it serves). Operators run at least two name servers.</p>
+  <p><b>TTL</b> = seconds a cache may keep a record. Short TTL: fresher, more lookups. Long TTL: faster, but stale or <b>poisoned data lingers</b>, and a forger picks the TTL of the forged record. Caching also cuts both ways for attackers: a cached name produces no outbound query, so there is nothing to forge until it expires.</p>
+
+  <h3 id="s5-3"><span class="sn">5.3</span>Wire format</h3>
+  <p>Binary protocol. Queries and responses share one layout: a fixed <b>12-byte header</b>, then <b>question, answer, authority, additional</b> sections. The reply copies the ID and question; that copy is the only thing classic DNS uses to match replies.</p>
+  <div class="tw"><table>
+    <tr><th>Header field (6 × 2 bytes)</th><th>Meaning</th></tr>
+    <tr><td>ID (TXID)</td><td>16-bit transaction ID chosen by the asker: 65,536 values</td></tr>
+    <tr><td>Flags</td><td><b>QR</b> 0 query / 1 response · <b>AA</b> authoritative answer · <b>TC</b> truncated, retry over TCP · <b>RD</b> recursion desired · <b>RA</b> recursion available · <b>RCODE</b> 0 NOERROR, 2 SERVFAIL, 3 NXDOMAIN</td></tr>
+    <tr><td>QDCOUNT · ANCOUNT · NSCOUNT · ARCOUNT</td><td>Entries in question · answer · authority · additional</td></tr>
+  </table></div>
+  <p><b>Question</b> = QNAME + QTYPE + QCLASS (IN = 1). <b>Name encoding</b>: each label as one length byte + characters, ending with a <code>00</code> byte (the root). Labels ≤ 63 bytes, names ≤ 255. This is not a C string: read a length, skip, repeat until zero.</p>
+  <pre>www.example.com  →  03 77 77 77 | 07 65 78 61 6d 70 6c 65 | 03 63 6f 6d | 00   (17 bytes)
+a.io             →  01 61 | 02 69 6f | 00                                        (6 bytes)</pre>
+  <p><b>Record on the wire</b>: NAME (often a 2-byte compression pointer, e.g. <code>c0 0c</code>) · TYPE 2 · CLASS 2 · TTL 4 (<code>00 00 01 2c</code> = 300) · RDLENGTH 2 · RDATA (<code>c0 00 02 14</code> = 192.0.2.20). Parsers must validate RDLENGTH against the real message size and handle compression pointers safely; bugs here caused real vulnerabilities.</p>
+  <p><b>Transport</b>: mostly <b>UDP port 53</b>; <b>TCP 53</b> for large (TC-flagged) responses and zone transfers. UDP has no handshake, so a reply is matched only by its contents and addressing, which makes spoofing and racing possible.</p>
+
+  <h3 id="s5-4"><span class="sn">5.4</span>Attacker positions and cache poisoning</h3>
+  <p>Positions from <a class="xref" href="#s1-3">§1.3</a>, applied to DNS, plus one DNS-specific case:</p>
+  <div class="tw"><table>
+    <tr><th>Attacker</th><th>Can do</th><th>Breaks</th></tr>
+    <tr><td>Passive observer</td><td>Read plaintext queries</td><td>Query confidentiality (privacy)</td></tr>
+    <tr><td>Off-path</td><td>Cannot see the query; sends forged replies with spoofed source</td><td>Integrity/authenticity of cached data, by guessing</td></tr>
+    <tr><td>On-path</td><td>Observe, block, delay, modify, race; <b>sees TXID and port</b></td><td>Integrity; randomness gives zero protection</td></tr>
+    <tr><td>Compromised resolver</td><td>Is the party you ask</td><td>Confidentiality and authenticity</td></tr>
+  </table></div>
+  <p><b>Cache poisoning</b>: plant a false record in a shared resolver’s cache once; every client of that resolver receives it until the TTL expires. No client is hacked. It is a protocol-level weakness: classic DNS cannot verify that a reply is authentic.</p>
+  <p><b>A resolver accepts a UDP reply if</b>: it arrives at the query’s source port · claims the queried server’s address (port 53) · has the same TXID · repeats the exact question · arrives while the query is outstanding (<b>first match wins</b>; the real reply arriving later is discarded). An off-path attacker knows the server and (often) the question; the unknowns are <b>TXID and source port</b>, and the timing is a race.</p>
+  <h4>Entropy: probabilities multiply, bits add</h4>
+  <span class="f">TXID only: 2¹⁶ = 65,536    TXID + random port: 2¹⁶ × 2¹⁶ ≈ 2³² ≈ 4.29 × 10⁹    q guesses: P ≈ q / 2³²  (q ≪ 2³²)</span>
+  <div class="tw"><table>
+    <tr><th>Worked example: q = 20,000 forged replies in one race</th><th class="num">P(success)</th></tr>
+    <tr><td>TXID only (pre-2008)</td><td class="num">20,000 / 65,536 ≈ 0.31 (about 1 in 3)</td></tr>
+    <tr><td>TXID + port</td><td class="num">20,000 / 4,294,967,296 ≈ 4.7 × 10⁻⁶ (about 1 in 215,000)</td></tr>
+    <tr><td>n repeated races</td><td class="num">1 − (1 − p)ⁿ</td></tr>
+  </table></div>
+  <p>Extra bits: <b>0x20 encoding</b> (random letter case in QNAME, echoed back) adds about one bit per letter. Weakening factors: poor RNG, small port range, <b>NAT</b> rewriting random ports to sequential ones, side channels inferring the port.</p>
+  <div class="trap"><p>Randomness is a <b>probability argument, not proof of data origin</b> <span class="t">T7</span>. It only slows a blind (off-path) attacker; an on-path attacker reads TXID and port directly.</p></div>
+
+  <h3 id="s5-5"><span class="sn">5.5</span>The Kaminsky attack (2008) and bailiwick</h3>
+  <p><b>Problem it solved for attackers</b>: once a name is cached (or a race is lost and the real answer is cached), there is no new query to forge until the TTL expires: only a few attempts per day.</p>
+  <ol>
+    <li>Trigger a lookup of a random, never-cached subdomain (<code>a8f1.victim.com</code>, <code>q91z.victim.com</code>, …): guaranteed cache miss, fresh outbound query, new race. The attacker also knows the exact QNAME.</li>
+    <li>Flood forged replies guessing the TXID (and port).</li>
+    <li>The real payload sits in the authority/additional section: <code>victim.com. NS ns.attacker.example.</code> (delegation data).</li>
+    <li>Lose? Pick a new random name immediately. Win? The resolver now sends <b>every</b> <code>victim.com</code> query (www, mail, login…) to the attacker.</li>
+  </ol>
+  <p>Against 2008 resolvers with a fixed source port, only 16 bits stood in the way, so success came in minutes. Response: emergency <b>source-port randomisation</b>, stricter <b>bailiwick</b> rules, renewed push for <b>DNSSEC</b> (root signed in 2010).</p>
+  <p><b>Bailiwick</b>: a server’s area of responsibility. Rule: <b>do not cache unrelated, unsolicited authority</b>. Ask example.com’s server about www.example.com and it slips in <code>bank.com A 203.0.113.66</code>: discard. Limitation: Kaminsky’s forged NS records for victim.com are <em>in</em>-bailiwick, so bailiwick alone does not stop it. Resolvers also rank trust so “extra” data does not overwrite authoritative data.</p>
+  <h4>Defence families</h4>
+  <div class="tw"><table>
+    <tr><th>Make forgery hard to get right (probabilistic)</th><th>Make forgery detectable (cryptographic)</th></tr>
+    <tr><td>Random TXID · random source port · strict matching (address, question, 0x20) · bailiwick · monitoring for floods of mismatched replies (e.g. retry over TCP). Helps only against off-path attackers.</td><td>DNSSEC validation: a forged answer for a signed zone fails, however well the TXID was guessed.</td></tr>
+  </table></div>
+  <p class="key">DNS poisoning is a <b>data-origin authentication problem expressed as a network race</b>. The resolver had no memory-corruption bug; randomness was quietly being used as authentication.</p>
+
+  <h3 id="s5-6"><span class="sn">5.6</span>DNS tunneling</h3>
+  <p>Not lying in answers, but using DNS as a <b>covert channel</b>. Data is encoded (Base64/Base32) into subdomain labels, e.g. <code>SGVsbG8.attacker.example</code> (“Hello”); replies carry data back, often in TXT records. Path: compromised host → <b>the organisation’s own recursive resolver</b> → attacker’s authoritative server. The malware never contacts the attacker’s IP directly, so IP blocklists miss it. Uses: malware command-and-control, data exfiltration, bypassing captive portals.</p>
+  <p><b>Why hard to block</b>: networks need DNS; tunnel queries are valid DNS; DNS is often logged less than web traffic; legitimate services (CDNs, antivirus, telemetry) also produce odd names. Better: force clients to the internal resolver (block outbound 53 elsewhere), log centrally, filter known-bad/new domains.</p>
+  <p><b>Detection signals</b>: long or high-entropy labels near the 63-char limit · unusual query volume or regular beaconing from one host · many unique subdomains under one rare or newly registered domain (each is a cache miss that reaches the attacker, which is what a tunnel needs) · many TXT/NULL queries · large responses, odd timing. These are <b>evidence, not proof</b>: compare against a baseline and correlate to limit false positives.</p>
+  <p>Tension: clients using DoH to an outside resolver hide DNS from the organisation, which helps privacy and also helps tunnels hide (<a class="xref" href="#s5-8">§5.8</a>).</p>
+
+  <h3 id="s5-7"><span class="sn">5.7</span>DNSSEC</h3>
+  <p>Applies Week 3 signatures (<a class="xref" href="#s3-5">§3.5</a>) to DNS. Provides <b>data-origin authentication</b>, <b>integrity</b> and <b>authenticated denial of existence</b>. It does <b>not</b> provide confidentiality.</p>
+  <div class="tw"><table>
+    <tr><th>Record</th><th>Code</th><th>Role</th></tr>
+    <tr><td>RRset</td><td>—</td><td>All records with the same name, type and class. DNSSEC signs <b>whole RRsets</b> (canonical order; original TTL inside the signature), so dropping or adding one record breaks the signature.</td></tr>
+    <tr><td>DNSKEY</td><td class="num">48</td><td>The zone’s public key: “which key verifies this zone’s signed data?” <b>ZSK</b> signs ordinary records (rotated often); <b>KSK</b> signs the DNSKEY set, and its hash goes to the parent (rotated rarely).</td></tr>
+    <tr><td>RRSIG</td><td class="num">46</td><td>Signature over one RRset: covered type, algorithm, original TTL, inception/expiration dates (limit replay), key tag, signer name.</td></tr>
+    <tr><td>DS</td><td class="num">43</td><td>In the <b>parent</b> zone, signed by the parent: a hash of the child’s KSK. Links parent trust to child key. No DS at the parent = child treated as unsigned (insecure).</td></tr>
+    <tr><td>NSEC / NSEC3</td><td class="num">47 / —</td><td>Signed proof that a name or type does not exist.</td></tr>
+  </table></div>
+  <h4>Chain of trust</h4>
+  <ol class="chain">
+    <li><b>Root trust anchor</b> <span>root KSK built into validators (rolled in 2018)</span></li>
+    <li>Root DNSKEY → root signs <b>DS for com</b></li>
+    <li>.com DNSKEY matches that DS → .com signs <b>DS for example.com</b></li>
+    <li>example.com DNSKEY matches that DS</li>
+    <li>example.com key verifies the RRSIG on <b>www.example.com A</b> <span>→ secure</span></li>
+  </ol>
+  <p>Loop: <code>trust anchor → DS → DNSKEY → RRSIG → RRset</code>, repeating DS → DNSKEY per level; any broken link = reject. Outcomes: <b>secure</b> (chain complete), <b>insecure</b> (provably unsigned, accepted without protection), <b>bogus</b> (should validate but fails → resolver returns <b>SERVFAIL</b>). On success the resolver sets the <b>AD</b> flag, which your device usually just trusts, so the last mile stays exposed unless you validate locally or encrypt that link.</p>
+  <h4>Authenticated denial</h4>
+  <p>You cannot pre-sign “does not exist” for infinitely many names, and one generic signed NXDOMAIN could be replayed to make real names vanish (a DoS). <b>NSEC</b> sorts the zone’s names and signs the gaps: <code>alice.example NSEC mail.example</code> proves <code>bob</code> does not exist; the type list at a name proves a type is absent. Side effect: <b>zone walking</b> lists every name. That is an <b>information-disclosure (confidentiality of zone contents)</b> issue, not an integrity failure. <b>NSEC3</b> uses hashed names (SHA-1, optional salt/iterations), so walkers collect hashes; predictable names can still be cracked by an <b>offline dictionary</b> attack. NSEC3 is not encrypted DNS.</p>
+  <div class="tw"><table>
+    <tr><th>DNSSEC stops (signed zone + validating resolver)</th><th>DNSSEC does not stop</th></tr>
+    <tr><td>Forged answers without valid RRSIGs · modification of signed RRsets · cache poisoning of validating resolvers · fake NXDOMAIN. It turns “silently redirected” into “lookup fails”: safer, still an outage.</td><td>Seeing which names you query · the resolver seeing all queries · compromised devices · DDoS and misconfiguration outages (expired RRSIGs, stale DS after a key change, clock skew). Larger signed replies can be abused for amplification.</td></tr>
+  </table></div>
+  <p class="key">DNSSEC ≠ DNS privacy. Cryptography proves who signed, not that the signer is honest: a compromised zone signing key produces validly signed lies.</p>
+
+  <h3 id="s5-8"><span class="sn">5.8</span>DoT, DoH and which defence stops which attacker</h3>
+  <ul>
+    <li><b>DoT</b> (DNS over TLS, <b>TCP 853</b>): DNS inside TLS between client and resolver. Confidentiality + integrity on that link, and authenticates the resolver via its certificate. Dedicated port: easy to identify or block. (Android “Private DNS”.)</li>
+    <li><b>DoH</b> (DNS over HTTPS, <b>443</b>): DNS message inside HTTP inside TLS. Same protection, but blends with web traffic: harder to censor, and can bypass corporate monitoring and filtering. Browsers can do it independently of OS settings.</li>
+    <li>Both: the resolver still sees every query, and its upstream queries are usually plain DNS. They do not prove answers are genuine <span class="t">T6</span>.</li>
+  </ul>
+  <div class="tw"><table>
+    <tr><th>Mechanism</th><th>Protects</th><th>Property</th></tr>
+    <tr><td>DNSSEC</td><td>The data, end to end (survives any number of caches)</td><td>Authenticity + integrity</td></tr>
+    <tr><td>DoT / DoH</td><td>The pipe, client ↔ resolver only</td><td>Confidentiality + integrity</td></tr>
+  </table></div>
+  <p><b>Scenario A, DoH without DNSSEC</b>: local observer blind; on-path attacker can only block; but a poisoned or malicious resolver delivers its lie, encrypted. Privacy up, truthfulness unchanged. <b>Scenario B, DNSSEC without encryption</b>: forged data for signed zones rejected; queries readable by the local network; an on-path LAN attacker could still forge the resolver’s reply unless the device validates. Truthfulness up, privacy unchanged. Together they are another case of <span class="t">T2</span>.</p>
+  <div class="tw"><table>
+    <tr><th>Attacker</th><th>Random TXID + port</th><th>DNSSEC validation</th><th>DoT / DoH</th></tr>
+    <tr><td>Passive observer</td><td class="no">✗ no effect</td><td class="no">✗ doesn’t hide queries</td><td class="yes">✓ hides queries from local network</td></tr>
+    <tr><td>Off-path poisoner</td><td>◑ makes guessing hard</td><td class="yes">✓ forgeries fail (signed zones)</td><td>◑ protects only client↔resolver leg</td></tr>
+    <tr><td>On-path modifier</td><td class="no">✗ sees TXID and port</td><td class="yes">✓ detects tampering (can still block)</td><td class="yes">✓ on the client↔resolver leg</td></tr>
+    <tr><td>Malicious resolver</td><td class="no">✗</td><td>◑ only if your device validates</td><td class="no">✗ encrypted pipe ends at the liar</td></tr>
+    <tr><td>Compromised zone signing key</td><td class="no">✗</td><td class="no">✗ attacker signs validly</td><td class="no">✗</td></tr>
+  </table></div>
+  <p>Never write “secure DNS”. Say authenticated, encrypted or integrity-protected, and between which parties.</p>
+  <div class="lab">
+    <p><b>Week 5 lab.</b> Craft queries byte by byte (header, encoded QNAME, QTYPE, QCLASS), parse responses using RDLENGTH, observe response matching, and race a forged answer with a rogue responder <b>only inside the isolated lab</b>. Compare with professional tools: <code>dig example.com A</code> (header, TXID, flags such as <code>qr rd ra ad</code>, four sections; run twice to watch the cached TTL fall), <code>dig +trace</code> (root → TLD → authoritative), <code>dig +dnssec</code> (shows RRSIGs), and <code>dnsmasq</code> as the lab resolver.</p>
+  </div>
+</section>
+
+<!-- ============ 6 ============ -->
+<section class="part" id="s6">
+  <div class="part-head"><div><span class="eyebrow">Week 6 · self-study deck, slides 1–52 (Parts I–III)</span><h2>6 · TLS 1.3 up to the 1.2 vs 1.3 comparison</h2></div>
+  <label class="done"><input type="checkbox" id="done-s6" data-sec="s6"> studied</label></div>
+  <p>TLS is the first protocol in the course where almost every earlier idea appears together: the network adversary (§1), AEAD (§2), DH, signatures, certificates and forward secrecy (§3), the cookie-stealing proxy (§4), and “authenticity vs privacy” (§5). Core idea: <b>a secure channel needs authentication + fresh key establishment + integrity-protected records + correct trust decisions</b>. Lose one and the channel can be attacked even with perfect encryption.</p>
+
+  <h3 id="s6-1"><span class="sn">6.1</span>Why TLS exists and where it sits</h3>
+  <p>The Week 4 proxy read credentials and bearer cookies and rewrote responses without breaking any cryptography, because there was none. That is the adversary TLS is built for: a <b>network attacker who can observe, inject, delete, replay or modify</b> traffic (Dolev–Yao style, <a class="xref" href="#s1-3">§1.3</a>).</p>
+  <div class="tw"><table>
+    <tr><th>Plain HTTP</th><th>HTTP over TLS</th><th>Property</th></tr>
+    <tr><td>Application bytes visible on-path</td><td>Encrypted after the handshake establishes traffic keys</td><td>Confidentiality</td></tr>
+    <tr><td>Active rewriting goes undetected</td><td>Every record carries an authentication tag</td><td>Integrity</td></tr>
+    <tr><td>No proof of server identity</td><td>Server proves control of the key in its certificate</td><td>Authentication</td></tr>
+    <tr><td>—</td><td>Transcript authentication binds negotiated parameters</td><td>Negotiation integrity</td></tr>
+  </table></div>
+  <ul>
+    <li><b>HTTPS</b> is HTTP semantics carried through TLS (port 443); the “S” is not a different application protocol. TLS also protects IMAPS, SMTPS, LDAPS, DoT, MQTT, database connections.</li>
+    <li><b>Stack</b>: Application → <b>TLS</b> (handshake + records) → TCP → IP → Link. TCP gives a reliable byte stream with <b>no</b> confidentiality or peer authentication. DTLS and QUIC carry TLS ideas over UDP.</li>
+    <li><b>TLS is a state machine</b>: an endpoint must know which messages are legal next, which secrets exist, which keys are active, and whether authentication and transcript checks are complete. Phases: plaintext Hellos → handshake keys → application keys. Unexpected transitions have caused real attacks (2015 state-machine bugs where clients skipped authentication if the attacker omitted messages). Reject anything unexpected.</li>
+    <li><b>Lifecycle</b>: Negotiate (version, algorithms, key share) → Derive (handshake secrets) → Authenticate (certificate + transcript) → Confirm (Finished) → Protect (application records). Abort if any step fails.</li>
+  </ul>
+
+  <h3 id="s6-2"><span class="sn">6.2</span>Goals and non-goals</h3>
+  <div class="tw"><table>
+    <tr><th>Goal</th><th>Defeats</th></tr>
+    <tr><td>Confidentiality</td><td>Passive eavesdropper recovering plaintext from records</td></tr>
+    <tr><td>Integrity</td><td>Active attacker altering records undetected</td></tr>
+    <tr><td>Server authentication</td><td>Impersonation. The <em>intended</em> server identity, not merely “some public key”</td></tr>
+    <tr><td>Freshness / key independence</td><td>One static key forever; replay of old records into new sessions</td></tr>
+    <tr><td>Negotiation integrity</td><td>Silently pushing both sides to weaker version/algorithms/key shares</td></tr>
+    <tr><td>Forward secrecy</td><td>Later theft of the long-term key exposing recorded sessions (<a class="xref" href="#s3-6">§3.6</a>)</td></tr>
+  </table></div>
+  <p><b>TLS does not guarantee</b> <span class="t">T6</span>: protection from SQLi, XSS, broken access control or logic bugs (it delivers the malicious request, encrypted) · safety after an endpoint is compromised · strong passwords or an honest server · hidden metadata (IP addresses, timing, sizes, and usually the hostname via SNI) · exactly-once execution (0-RTT early data can be replayed). TLS gives confidentiality of content, not anonymity.</p>
+
+  <h3 id="s6-3"><span class="sn">6.3</span>Record layer</h3>
+  <p>TCP has no message boundaries and no protection, so TLS creates its own framing: <b>records</b>, each at most <b>2¹⁴ = 16,384 bytes</b> of plaintext. Pipeline: <b>plaintext → fragment → protect (AEAD + nonce + AAD) → transmit over TCP → verify the tag before use</b>.</p>
+  <ul>
+    <li><b>Record structure</b>: header (TLS 1.3: 5 bytes: outer type shown as application_data, legacy version <code>0x0303</code>, 2-byte length) · ciphertext (includes the real inner content type, so observers cannot tell handshake from application records) · tag (16 bytes for AES-GCM). Example: 1,000 bytes of HTTP → 5 + 1,000 + 1 + 16 = <b>1,022 bytes</b> on the wire.</li>
+    <li><b>AEAD</b> (from <a class="xref" href="#s2-5">§2.5</a>) is <b>required</b> in TLS 1.3:</li>
+  </ul>
+  <span class="f">(C, T) = AEAD_Encrypt(K, N, P, A)        AEAD_Decrypt(K, N, C, A, T) → P  or  FAIL</span>
+  <p>K = traffic key from the handshake · N = per-record nonce · P = plaintext · <b>A = associated data</b>: authenticated but not encrypted (the TLS 1.3 record header) · C = ciphertext · T = tag. Change one bit of A and decryption fails even though A was never encrypted. AEAD cleanly separates “must be secret” from “must be authentic”. There is no partial or unauthenticated output: <b>unauthenticated plaintext must never reach the application</b>.</p>
+  <h4>Nonces and sequence numbers</h4>
+  <span class="f">nonce = static IV (from the handshake) ⊕ 64-bit record sequence number (left-padded)</span>
+  <ul>
+    <li>Each direction counts records from 0 in each key epoch. The number is <b>never sent</b>; both sides track it. Every record gets a unique nonce, and applications never choose nonces <span class="t">T5</span>.</li>
+    <li>Nonce reuse in GCM would give <code>C₁ ⊕ C₂ = P₁ ⊕ P₂</code> (<a class="xref" href="#s2-5">§2.5</a>) and also leak the authentication key, enabling forged tags.</li>
+    <li>Because record #5 only decrypts as #5: <b>reordering</b>, <b>replay within the connection</b> and <b>deletion</b> all fail the tag check (truncation at the end is caught by <code>close_notify</code>). No cut-and-paste of valid records into other positions.</li>
+  </ul>
+  <div class="tw"><table>
+    <tr><th></th><th>AES-GCM</th><th>ChaCha20-Poly1305</th></tr>
+    <tr><td>Structure</td><td>AES block cipher in counter mode + GHASH polynomial tag over a Galois field</td><td>ChaCha20 stream cipher (add-rotate-XOR) + Poly1305 one-time authenticator (fresh key per record)</td></tr>
+    <tr><td>Strength</td><td>Very fast with AES hardware (AES-NI, ARMv8)</td><td>Fast and constant-time in plain software; good for devices without AES hardware</td></tr>
+    <tr><td>Parameters</td><td>128/256-bit key, 96-bit nonce, 128-bit tag</td><td>256-bit key, 96-bit nonce, 16-byte tag</td></tr>
+    <tr><td>TLS 1.3 suites</td><td><code>TLS_AES_128_GCM_SHA256</code>, <code>TLS_AES_256_GCM_SHA384</code></td><td><code>TLS_CHACHA20_POLY1305_SHA256</code></td></tr>
+  </table></div>
+  <h4>When a record fails authentication</h4>
+  <p>Reject it and terminate with an alert (<code>bad_record_mac</code>). Do <b>not</b> reveal <em>why</em>: different errors or timings for “bad padding” vs “bad MAC” create a <b>padding oracle</b> side channel that leaks plaintext over many queries (Vaudenay 2002, Lucky13 2013, POODLE 2014).</p>
+  <div class="tw"><table>
+    <tr><th>TLS 1.2 CBC-era records</th><th>TLS 1.3 records</th></tr>
+    <tr><td>CBC + separate HMAC, <b>MAC-then-encrypt</b>: receiver must decrypt and strip padding before checking the MAC. Padding/MAC failures behaved differently; constant time was very hard. Led to Lucky13 and POODLE. (Encrypt-then-MAC was added later as an extension but rarely default.)</td><td><b>Only AEAD</b> suites; no CBC. One standard interface for encryption + integrity, one failure mode. Removes whole classes of record-layer bugs by design.</td></tr>
+  </table></div>
+
+  <h3 id="s6-4"><span class="sn">6.4</span>The TLS 1.3 handshake at a glance</h3>
+  <p>The handshake must: agree a <b>version</b> · agree <b>algorithms</b> (AEAD + hash, key-exchange group, signature algorithm) · establish shared secret material (ephemeral <b>(EC)DHE</b>, optionally a <b>PSK</b> for resumption) · <b>authenticate the server</b> (X.509 chain + CertificateVerify) · <b>bind everything into a transcript</b> · derive <b>separate</b> handshake and application traffic secrets.</p>
+  <figure>
+    <div class="dg">
+    <svg viewBox="0 0 640 430" role="img" aria-labelledby="tlsT">
+      <title id="tlsT">TLS 1.3 full handshake: ClientHello and ServerHello in plaintext, then the server's encrypted extensions, certificate, certificate verify and finished under handshake keys, then the client's finished, then application data under application keys.</title>
+      <defs>
+        <marker id="h3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="d-head"/></marker>
+        <marker id="h3a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="d-head acc"/></marker>
+        <marker id="h3w" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="d-head warn"/></marker>
+      </defs>
+      <rect x="40" y="8" width="110" height="32" rx="6" class="d-box"/><text x="95" y="29" text-anchor="middle" class="d-tb">Client</text>
+      <rect x="490" y="8" width="110" height="32" rx="6" class="d-box"/><text x="545" y="29" text-anchor="middle" class="d-tb">Server</text>
+      <line x1="95" y1="40" x2="95" y2="412" class="d-life"/><line x1="545" y1="40" x2="545" y2="412" class="d-life"/>
+
+      <line x1="97" y1="74" x2="541" y2="74" class="d-arrow" marker-end="url(#h3)"/>
+      <text x="320" y="66" text-anchor="middle" class="d-tb">ClientHello</text>
+      <text x="320" y="90" text-anchor="middle" class="d-tm">supported_versions · cipher_suites · key_share · sig_algs · SNI · ALPN</text>
+
+      <line x1="543" y1="122" x2="99" y2="122" class="d-arrow" marker-end="url(#h3)"/>
+      <text x="320" y="114" text-anchor="middle" class="d-tb">ServerHello</text>
+      <text x="320" y="138" text-anchor="middle" class="d-tm">chosen version + suite · server key_share</text>
+
+      <rect x="110" y="148" width="420" height="24" rx="4" class="d-band"/>
+      <text x="320" y="164" text-anchor="middle" class="d-ta">both compute (EC)DHE secret → handshake traffic keys</text>
+
+      <line x1="543" y1="196" x2="99" y2="196" class="d-arrow acc" marker-end="url(#h3a)"/>
+      <text x="320" y="190" text-anchor="middle" class="d-t">EncryptedExtensions</text>
+      <line x1="543" y1="224" x2="99" y2="224" class="d-arrow acc" marker-end="url(#h3a)"/>
+      <text x="320" y="218" text-anchor="middle" class="d-t">Certificate  (chain)</text>
+      <line x1="543" y1="252" x2="99" y2="252" class="d-arrow acc" marker-end="url(#h3a)"/>
+      <text x="320" y="246" text-anchor="middle" class="d-t">CertificateVerify  (signature over transcript hash)</text>
+      <line x1="543" y1="280" x2="99" y2="280" class="d-arrow acc" marker-end="url(#h3a)"/>
+      <text x="320" y="274" text-anchor="middle" class="d-t">Finished  (HMAC over transcript hash)</text>
+
+      <rect x="110" y="292" width="420" height="24" rx="4" class="d-band"/>
+      <text x="320" y="308" text-anchor="middle" class="d-ta">client: validate chain + hostname, signature, Finished</text>
+
+      <line x1="97" y1="344" x2="541" y2="344" class="d-arrow acc" marker-end="url(#h3a)"/>
+      <text x="320" y="338" text-anchor="middle" class="d-t">Finished</text>
+      <line x1="99" y1="384" x2="541" y2="384" class="d-arrow warn" marker-start="url(#h3w)" marker-end="url(#h3w)"/>
+      <text x="320" y="376" text-anchor="middle" class="d-tb">Application data</text>
+      <text x="320" y="400" text-anchor="middle" class="d-tw">application traffic keys (optionally KeyUpdate later)</text>
+
+      <path d="M32,74 H24 V280 H32" class="d-arrow"/>
+      <text x="14" y="177" text-anchor="middle" class="d-tm" transform="rotate(-90 14 177)">1 RTT</text>
+      <path d="M608,196 H616 V280 H608" class="d-arrow acc"/>
+      <text x="628" y="238" text-anchor="middle" class="d-ta" transform="rotate(-90 628 238)">one server flight</text>
+    </svg>
+    </div>
+    <figcaption>Black = plaintext · <span style="color:var(--accent)">teal = handshake traffic keys</span> · <span style="color:var(--warn)">amber = application traffic keys</span>. The client can send its Finished and first application data together, so data flows after <b>one round trip</b>. If the server wants a different group than the client’s key_share, it sends <b>HelloRetryRequest</b>, costing an extra round trip.</figcaption>
+  </figure>
+  <h4>Key epochs</h4>
+  <p>One connection ≠ one key. <b>Initial</b> (Hellos, plaintext) → <b>Handshake</b> (encrypted certificate, CertificateVerify, Finished) → <b>Application</b> (data) → <b>Updated</b> (optional <code>KeyUpdate</code> for fresh keys, e.g. for AEAD usage limits or to limit damage if a key leaks). Each direction has its own keys per epoch, and epochs are derived separately (key separation).</p>
+
+  <h3 id="s6-5"><span class="sn">6.5</span>The handshake messages</h3>
+  <div class="tw"><table>
+    <tr><th>Message</th><th>Encrypted?</th><th>Carries</th><th>Provides</th></tr>
+    <tr><td>ClientHello</td><td>No</td><td><code>legacy_version = 0x0303</code> for middleboxes; real versions in <code>supported_versions</code> · 32-byte random · cipher suites · <code>supported_groups</code> (X25519, P-256, hybrid PQ such as X25519MLKEM768) · <code>key_share</code>(s) · <code>signature_algorithms</code> · SNI · ALPN · (PSK fields for resumption)</td><td>The offer; all of it enters the transcript</td></tr>
+    <tr><td>ServerHello</td><td>No</td><td>Selected version + one suite · server <code>key_share</code> in a matching group · its random · accepted PSK if any</td><td>Commits to parameters; completes what both sides need for handshake secrets</td></tr>
+    <tr><td>EncryptedExtensions</td><td>Handshake keys</td><td>Other negotiated values: ALPN choice, SNI acknowledgement, record size limit, early-data acceptance</td><td>Less metadata visible than TLS 1.2 (whose extensions were in plaintext ServerHello)</td></tr>
+    <tr><td>Certificate</td><td>Handshake keys</td><td>Leaf certificate (public key + SAN hostnames) + intermediates; root usually not sent (client’s trust store has it)</td><td>Identity ↔ key binding (<a class="xref" href="#s3-5">§3.5</a>); certificate hidden from observers in 1.3</td></tr>
+    <tr><td>CertificateVerify</td><td>Handshake keys</td><td>Signature with the certificate’s private key over: 64 bytes of <code>0x20</code> ‖ <code>"TLS 1.3, server CertificateVerify"</code> ‖ <code>0x00</code> ‖ transcript hash</td><td><b>Proof of possession</b>, bound to this handshake</td></tr>
+    <tr><td>Finished</td><td>Handshake keys</td><td><code>verify_data = HMAC(finished_key, transcript_hash)</code>, finished_key derived from that side’s handshake traffic secret</td><td><b>Key confirmation</b> + transcript integrity</td></tr>
+  </table></div>
+  <ul>
+    <li><b>SNI</b> (Server Name Indication): the hostname, so one IP can host many sites and pick the right certificate. Visible in plaintext ClientHello (used for censorship/filtering) unless <b>ECH</b> (Encrypted Client Hello) encrypts the inner ClientHello with a key published in DNS. <b>ALPN</b>: agree the inner protocol (<code>h2</code>, <code>http/1.1</code>) without an extra round trip. Both are in the transcript, so an attacker cannot silently change them.</li>
+    <li><b>TLS 1.3 cipher suite = AEAD + hash only</b> (hash used for HKDF and the transcript). Key exchange is negotiated via <code>supported_groups</code> + <code>key_share</code>; authentication via <code>signature_algorithms</code> + the certificate. Compare TLS 1.2’s <code>TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256</code> (key exchange + authentication + cipher + PRF hash in one name, hundreds of combinations, many weak).</li>
+    <li><b>ECDHE</b>: client sends <code>A = a·G</code>, server <code>B = b·G</code>; both compute <code>a·b·G</code>; an eavesdropper sees A and B only. <b>Ephemeral</b>: a and b are fresh per connection and discarded, the source of forward secrecy (<a class="xref" href="#s3-6">§3.6</a>).</li>
+    <li><b>When encryption starts</b>: the Hellos must be plaintext (no shared secret yet). After ServerHello both derive handshake traffic secrets and everything else is encrypted. After Finished, application traffic secrets take over.</li>
+    <li><b>Certificate checks</b> the client must do: build a path to a trusted root, verify each signature, check validity dates, CA constraints and key usage, <b>match the hostname against the SAN</b>, apply revocation/CT policy. Parsing without validating (<code>verify=False</code>) makes TLS trivially MITM-able.</li>
+  </ul>
+  <h4>Transcript hash</h4>
+  <span class="f">Transcript-Hash(M₁ … Mₙ) = Hash(M₁ ‖ M₂ ‖ … ‖ Mₙ)    (the suite’s hash, e.g. SHA-256)</span>
+  <p>Signed by CertificateVerify, MACed by Finished, and mixed into key derivation. Change anything (version list, key share, certificate, an ALPN value) and signatures fail, Finished fails and the derived keys differ. Like both parties signing a fingerprint of every page of a contract.</p>
+  <p class="key">Certificate = “this key belongs to bank.example”. CertificateVerify = “and I hold that key, right now, in this handshake”. Finished = “we derived the same keys and saw the same messages”.</p>
+
+  <h3 id="s6-6"><span class="sn">6.6</span>Raw DH vs authenticated TLS key exchange</h3>
+  <p>This closes the story from <a class="xref" href="#s3-4">§3.4</a> <span class="t">T4</span>. Raw DH: Mallory replaces both public values and holds two secrets. TLS 1.3:</p>
+  <ol>
+    <li>The <b>Certificate</b> binds the server’s long-term public key to its hostname (validated via PKI).</li>
+    <li><b>CertificateVerify</b> signs the transcript hash, which includes <b>both key shares</b>. If Mallory replaced the client’s share, the signed transcript does not match what the client sent. She cannot sign as the real server (no private key) and cannot get a CA certificate for that hostname.</li>
+    <li><b>Finished</b> confirms both sides derived the same secret from the same transcript.</li>
+  </ol>
+  <p class="key">The mathematics of DH was not broken in Week 3. The missing property was authentication.</p>
+  <p>Same lesson elsewhere: OpenSSH host keys + <code>known_hosts</code> (<a class="xref" href="#s3-lab">Lab 3C</a>), HTTPS certificate validation (<a class="xref" href="#s4-6">§4.6</a>), and TLS’s certificate check catching DNS lies, since a forged DNS answer leads to a server without the right certificate (<a class="xref" href="#s5-4">§5.4</a>).</p>
+
+  <h3 id="s6-7"><span class="sn">6.7</span>Client authentication and mTLS</h3>
+  <ul>
+    <li>Web default: TLS authenticates the <b>server</b>; the user then authenticates inside the channel (password, passkey, cookie).</li>
+    <li>TLS 1.3 can authenticate the client: server sends <b>CertificateRequest</b> (encrypted, after EncryptedExtensions); client replies with Certificate, CertificateVerify and Finished. Post-handshake client authentication is also possible.</li>
+    <li><b>mTLS</b> (mutual TLS): both sides present certificates. Common in service meshes (short-lived certs per microservice, “zero trust”), enterprise VPN / Wi-Fi (EAP-TLS) and IoT devices.</li>
+    <li>It authenticates a <b>cryptographic identity</b>; <b>authorization</b> is still separate (a compromised service with a valid certificate is still “authenticated”). Operational cost: every client needs keys, certificates, renewal and revocation.</li>
+  </ul>
+  <aside class="note"><p>This guide stops at slide 52. Not covered here: Part IV (TLS 1.2 vs 1.3 comparison, RSA key transport, HKDF and the key schedule), Part V (downgrade, resumption, PSK, 0-RTT), Parts VI–VII (X.509 anatomy, chain validation steps, revocation, Certificate Transparency), Part VIII (BEAST, Lucky13, POODLE, Heartbleed, FREAK, Logjam) and Part IX.</p></aside>
+</section>
+
+<!-- ============ 7 ============ -->
+<section class="part" id="s7">
+  <div class="part-head"><div><span class="eyebrow">Revision sheet · all weeks</span><h2>7 · Formula &amp; mechanism sheet</h2></div>
+  <label class="done"><input type="checkbox" id="done-s7" data-sec="s7"> studied</label></div>
+
+  <h3 id="s7-1"><span class="sn">7.1</span>Formulas to write from memory</h3>
+  <div class="tw"><table>
+    <tr><th>Formula</th><th>Meaning</th><th></th></tr>
+    <tr><td><code>Adv = |Pr[b′ = b] − 1/2|</code></td><td>Advantage over guessing in a security game (IND-CPA)</td><td><a class="xref" href="#s2-6">§2.6</a></td></tr>
+    <tr><td><code>2^−λ</code> negligible; <code>1/λ</code>, <code>1/λ^100</code> not</td><td>Negligible = below 1/λ^c for every c</td><td><a class="xref" href="#s1-3">§1.3</a></td></tr>
+    <tr><td><code>Pr[M=m | C=c] = Pr[M=m]</code></td><td>Perfect secrecy</td><td><a class="xref" href="#s2-2">§2.2</a></td></tr>
+    <tr><td><code>C = M ⊕ K</code></td><td>One-time pad</td><td><a class="xref" href="#s2-2">§2.2</a></td></tr>
+    <tr><td><code>C₁ ⊕ C₂ = M₁ ⊕ M₂</code>; <code>M₂ = C₁ ⊕ C₂ ⊕ M₁</code></td><td>OTP key / CTR nonce reuse; known-plaintext recovery</td><td><a class="xref" href="#s2-5">§2.5</a></td></tr>
+    <tr><td><code>Cᵢ = E_K(Pᵢ ⊕ Cᵢ₋₁)</code>, <code>C₁ = E_K(P₁ ⊕ IV)</code></td><td>CBC encryption</td><td><a class="xref" href="#s2-5">§2.5</a></td></tr>
+    <tr><td><code>Cᵢ = Pᵢ ⊕ E_K(N ‖ i)</code></td><td>CTR encryption</td><td><a class="xref" href="#s2-5">§2.5</a></td></tr>
+    <tr><td><code>C′ = C ⊕ Δ ⇒ P′ = P ⊕ Δ</code></td><td>CTR malleability</td><td><a class="xref" href="#s2-5">§2.5</a></td></tr>
+    <tr><td>preimage ≈ <code>2ⁿ</code>, collision ≈ <code>2ⁿᐟ²</code></td><td>Generic hash work; birthday bound <code>q ≈ √N</code></td><td><a class="xref" href="#s3-1">§3.1</a></td></tr>
+    <tr><td><code>H((K′⊕opad) ‖ H((K′⊕ipad) ‖ m))</code></td><td>HMAC</td><td><a class="xref" href="#s3-2">§3.2</a></td></tr>
+    <tr><td><code>c = mᵉ mod n</code>, <code>m = c^d mod n</code>, <code>n = pq</code></td><td>Textbook RSA (never deploy raw)</td><td><a class="xref" href="#s3-3">§3.3</a></td></tr>
+    <tr><td><code>A = gᵃ</code>, <code>B = gᵇ</code>, <code>K = gᵃᵇ mod p</code></td><td>Diffie–Hellman</td><td><a class="xref" href="#s3-4">§3.4</a></td></tr>
+    <tr><td><code>P ≈ q / 2³²</code>; <code>1 − (1 − p)ⁿ</code></td><td>Blind DNS forgery with TXID + port; n repeated races</td><td><a class="xref" href="#s5-4">§5.4</a></td></tr>
+    <tr><td><code>(C,T) = AEAD_Encrypt(K, N, P, A)</code></td><td>AEAD interface</td><td><a class="xref" href="#s6-3">§6.3</a></td></tr>
+    <tr><td><code>nonce = IV ⊕ seq</code></td><td>TLS 1.3 per-record nonce</td><td><a class="xref" href="#s6-3">§6.3</a></td></tr>
+    <tr><td><code>verify_data = HMAC(finished_key, transcript_hash)</code></td><td>TLS Finished</td><td><a class="xref" href="#s6-5">§6.5</a></td></tr>
+  </table></div>
+
+  <h3 id="s7-2"><span class="sn">7.2</span>Numbers worth knowing</h3>
+  <p class="num">AES block 128 bits · rounds 10/12/14 · SHA-256 collision ≈ 2¹²⁸ · SHA-1 hex tag 40 chars · Ethernet header 14 B, EtherType 0x0800 · IPv4 protocol 6 TCP / 17 UDP · DNS header 12 B · TXID 16 bits · DNS UDP/TCP 53 · DoT 853 · DoH/HTTPS 443 · label ≤ 63 B, name ≤ 255 B · RCODE 0/2/3 = NOERROR/SERVFAIL/NXDOMAIN · TLS record ≤ 2¹⁴ B plaintext · TLS 1.3 header 5 B, GCM tag 16 B · GCM/ChaCha nonce 96 bits · TLS 1.3 full handshake = 1 RTT.</p>
+
+  <h3 id="s7-3"><span class="sn">7.3</span>Mechanism → what it gives, what it does not</h3>
+  <div class="tw"><table>
+    <tr><th>Mechanism</th><th>Gives</th><th>Does not give</th><th></th></tr>
+    <tr><td>ECB / CBC / CTR</td><td>Confidentiality (not ECB; CBC/CTR only with correct IV/nonce)</td><td>Integrity (all malleable)</td><td><a class="xref" href="#s2-5">§2.5</a></td></tr>
+    <tr><td>AEAD (GCM, ChaCha20-Poly1305)</td><td>Confidentiality + integrity of ciphertext and associated data</td><td>Safety under nonce reuse; peer authentication</td><td><a class="xref" href="#s2-5">§2.5</a> <a class="xref" href="#s6-3">§6.3</a></td></tr>
+    <tr><td>Hash</td><td>Fingerprint, accidental-change detection</td><td>Authentication (anyone recomputes)</td><td><a class="xref" href="#s3-1">§3.1</a></td></tr>
+    <tr><td>MAC / HMAC</td><td>Integrity + shared-key origin authentication</td><td>Confidentiality; third-party evidence</td><td><a class="xref" href="#s3-2">§3.2</a></td></tr>
+    <tr><td>Signature</td><td>Integrity + origin + public verifiability</td><td>Key-to-identity binding by itself</td><td><a class="xref" href="#s3-5">§3.5</a></td></tr>
+    <tr><td>Certificate</td><td>Identity ↔ public key binding via issuer signature</td><td>Encryption of anything; proof the sender holds the key</td><td><a class="xref" href="#s3-5">§3.5</a></td></tr>
+    <tr><td>Diffie–Hellman</td><td>Shared secret over an observed network</td><td>Knowing who you share it with</td><td><a class="xref" href="#s3-4">§3.4</a></td></tr>
+    <tr><td>Ephemeral (EC)DHE</td><td>Forward secrecy</td><td>Authentication (needs signatures)</td><td><a class="xref" href="#s3-6">§3.6</a></td></tr>
+    <tr><td>CSPRNG</td><td>Unpredictable keys, nonces, tokens</td><td>—</td><td><a class="xref" href="#s3-7">§3.7</a></td></tr>
+    <tr><td>Secure cookie flag</td><td>Cookie only sent over HTTPS</td><td>Protection if HTTPS is misused</td><td><a class="xref" href="#s4-4">§4.4</a></td></tr>
+    <tr><td>HttpOnly</td><td>Blocks <code>document.cookie</code> reads</td><td>Stops XSS acting as the user</td><td><a class="xref" href="#s4-4">§4.4</a></td></tr>
+    <tr><td>Random TXID + port</td><td>Harder blind (off-path) forgery</td><td>Anything against on-path or a lying resolver</td><td><a class="xref" href="#s5-4">§5.4</a></td></tr>
+    <tr><td>Bailiwick checking</td><td>Blocks unrelated, unsolicited cached data</td><td>In-bailiwick forged NS (Kaminsky)</td><td><a class="xref" href="#s5-5">§5.5</a></td></tr>
+    <tr><td>DNSSEC</td><td>DNS data origin + integrity + authenticated denial</td><td>Query privacy; compromised signer</td><td><a class="xref" href="#s5-7">§5.7</a></td></tr>
+    <tr><td>DoT / DoH</td><td>Client↔resolver confidentiality + integrity</td><td>Truth of the answer; privacy from the resolver</td><td><a class="xref" href="#s5-8">§5.8</a></td></tr>
+    <tr><td>TLS 1.3</td><td>Confidentiality, integrity, server auth, freshness, negotiation integrity, forward secrecy</td><td>App bugs, endpoint compromise, metadata hiding, exactly-once (0-RTT)</td><td><a class="xref" href="#s6-2">§6.2</a></td></tr>
+    <tr><td>mTLS</td><td>Client cryptographic identity too</td><td>Authorization</td><td><a class="xref" href="#s6-7">§6.7</a></td></tr>
+  </table></div>
+</section>
+
+<!-- ============ 8 ============ -->
+<section class="part" id="s8">
+  <div class="part-head"><div><span class="eyebrow">Self-test · answers hidden</span><h2>8 · Practice questions</h2></div>
+  <label class="done"><input type="checkbox" id="done-s8" data-sec="s8"> studied</label></div>
+  <p>Mostly taken from the exam-style and self-check slides. Answer out loud or on paper first, then open the answer.</p>
+  <div class="qtools"><button type="button" id="openAll">Show all answers</button><button type="button" id="closeAll">Hide all answers</button></div>
+
+  <h4>Foundations · Week 1</h4>
+  <details class="q"><summary>Is an on-path attacker always active? Give a counter-example.</summary><div class="a">No. Position and behaviour are separate dimensions. The Week 1 lab sniffer is <b>passive on-path</b>: it only observes. <a class="xref" href="#s1-3">§1.3</a></div></details>
+  <details class="q"><summary>Alice and Bob share an HMAC key. Can Bob prove to a judge that Alice sent a message?</summary><div class="a">No. Bob holds the same key and could have produced the tag himself, so a MAC gives no third-party evidence (no non-repudiation). A digital signature can, assuming the key binding is trusted. <a class="xref" href="#s3-5">§3.5</a></div></details>
+  <details class="q"><summary>What does Dolev–Yao assume about cryptography, and what is it good for?</summary><div class="a">Cryptography is ideal (no decryption without the key) while the network is fully hostile (read, block, delay, reorder, replay, inject, modify, impersonate). It finds <b>protocol logic flaws</b> such as replay and missing authentication. The computational model instead asks whether an efficient (PPT) attacker gains non-negligible advantage. <a class="xref" href="#s1-3">§1.3</a></div></details>
+  <details class="q"><summary>Is STRIDE a proof that a design is secure?</summary><div class="a">No. It is a threat-generation checklist and shared vocabulary. It does not prove security, is not a complete attacker model, and does not guarantee all threats were found. <a class="xref" href="#s1-2">§1.2</a></div></details>
+
+  <h4>Symmetric crypto · Week 2</h4>
+  <details class="q"><summary>An ECB-encrypted image still shows the picture. Which property failed, and is AES broken?</summary><div class="a">Confidentiality (structure/equality leaks). AES is fine; the <b>mode</b> is the failure: ECB is deterministic, so equal plaintext blocks give equal ciphertext blocks. Not IND-CPA secure. <a class="xref" href="#s2-5">§2.5</a></div></details>
+  <details class="q"><summary>A CTR nonce was reused under the same key. What does the attacker learn, and what if one plaintext is known?</summary><div class="a"><code>C₁ ⊕ C₂ = M₁ ⊕ M₂</code> (the keystream cancels). With M₁ known: <code>M₂ = C₁ ⊕ C₂ ⊕ M₁</code>. <a class="xref" href="#s2-5">§2.5</a></div></details>
+  <details class="q"><summary>A modified CBC ciphertext is accepted. Which property is missing?</summary><div class="a">Integrity/authentication. CBC is malleable: flipping bits in Cᵢ₋₁ flips the same bits in Pᵢ. Encryption alone ≠ integrity; use AEAD. <a class="xref" href="#s2-5">§2.5</a></div></details>
+  <details class="q"><summary>AEAD tag verification fails. Should the decrypted plaintext be used?</summary><div class="a">Never. Verify before use; AEAD decryption returns either plaintext or FAIL. <a class="xref" href="#s2-5">§2.5</a> <a class="xref" href="#s6-3">§6.3</a></div></details>
+  <details class="q"><summary>Which parameters must be secret, and which must only be unique or unpredictable?</summary><div class="a">Key: secret. IV (CBC): public but unpredictable. Nonce (CTR/GCM): public but unique per key. Public does not mean arbitrary. <a class="xref" href="#s2-5">§2.5</a></div></details>
+  <details class="q"><summary>List the four requirements for OTP perfect secrecy and why it isn’t used for Internet traffic.</summary><div class="a">Truly random key, at least as long as the message, secret, never reused. Key distribution: a 10 GB file needs 10 GB of pre-shared key. <a class="xref" href="#s2-2">§2.2</a></div></details>
+
+  <h4>Integrity &amp; public key · Week 3</h4>
+  <details class="q"><summary>Did the length-extension attacker recover the key or break SHA? Why does HMAC resist?</summary><div class="a">Neither. It abused <code>H(K‖m)</code>: the visible digest is the Merkle–Damgård state after <code>K‖m</code>, so hashing continues from it after a key-length guess and glue padding. HMAC’s visible tag is the outer hash of an inner hash, not that state. <a class="xref" href="#s3-2">§3.2</a></div></details>
+  <details class="q"><summary>What is the generic collision cost for a 256-bit hash, and why?</summary><div class="a">About 2¹²⁸, by the birthday bound: q samples give ~q²/2 pairs, so collisions appear around q ≈ 2ⁿᐟ². <a class="xref" href="#s3-1">§3.1</a></div></details>
+  <details class="q"><summary>In the DH MITM, did Eve solve discrete log? Which property was missing, and what fixes it?</summary><div class="a">No; she ran two honest DH exchanges with her own values. Missing: <b>authentication</b> of the exchange. Fix: certificates + a signature over the key-exchange transcript (TLS CertificateVerify), or host keys in SSH. <a class="xref" href="#s3-4">§3.4</a> <a class="xref" href="#s6-6">§6.6</a></div></details>
+  <details class="q"><summary>How does ephemeral DH give forward secrecy?</summary><div class="a">Session keys come from fresh per-session DH secrets that are erased afterwards. The long-term key only signs/authenticates, so stealing it later cannot recompute old session keys from recorded traffic. <a class="xref" href="#s3-6">§3.6</a></div></details>
+  <details class="q"><summary>What does OpenSSH store in known_hosts, and what happens if users disable host-key checking?</summary><div class="a">The server’s host key (fingerprint) from the first trusted connection. Later connections compare against it and warn on change. Disabling checks (<code>StrictHostKeyChecking=no</code>) brings back the raw-DH MITM. <a class="xref" href="#s3-lab">Lab 3C</a></div></details>
+  <details class="q"><summary>Why must session tokens and keys come from a CSPRNG? Give a real failure.</summary><div class="a">General PRNGs can be predicted from their state; a CSPRNG is unpredictable and backed by OS entropy. Debian OpenSSL’s entropy bug made keys enumerable. <a class="xref" href="#s3-7">§3.7</a></div></details>
+
+  <h4>HTTP &amp; sessions · Week 4</h4>
+  <details class="q"><summary>Why is a session cookie often equivalent to a credential? How can a confidentiality failure become an authentication failure?</summary><div class="a">It is a bearer token: possession is enough for the server to treat the request as that session. Reading it (confidentiality) lets the attacker replay it and be accepted as the user (session authentication), without the password. <a class="xref" href="#s4-3">§4.3</a></div></details>
+  <details class="q"><summary>Why does POST not protect login data?</summary><div class="a">POST only puts data in the body. Over plaintext HTTP the body is as readable as headers. Only transport protection (TLS) hides it. <a class="xref" href="#s4-1">§4.1</a></div></details>
+  <details class="q"><summary>What does Secure protect against? What does HttpOnly not protect against?</summary><div class="a">Secure: the cookie being sent over plaintext HTTP. HttpOnly does not stop the browser sending the cookie, does not stop injected script from acting as the user, and does not fix authorization bugs. <a class="xref" href="#s4-4">§4.4</a></div></details>
+  <details class="q"><summary>Explain how an on-path attacker moves from passive observation to active replay.</summary><div class="a">Read → replay → tamper. Passively read <code>Cookie: session=S</code> (confidentiality), then send a new request carrying S (active; authentication), and as an interception proxy also rewrite requests/responses (integrity). <a class="xref" href="#s4-3">§4.3</a></div></details>
+  <details class="q"><summary>What is session fixation and its fix?</summary><div class="a">The attacker makes the victim use a session ID the attacker knows before login; after login it becomes authenticated. Fix: issue a fresh token after login and privilege changes. <a class="xref" href="#s4-5">§4.5</a></div></details>
+
+  <h4>DNS · Week 5</h4>
+  <details class="q"><summary>With 20,000 forged replies in one race, compare success with TXID only vs TXID + random port.</summary><div class="a">TXID only: 20,000/65,536 ≈ 0.31. TXID + port: 20,000/2³² ≈ 4.7 × 10⁻⁶ (≈ 1 in 215,000). Still a probability argument, not authentication. <a class="xref" href="#s5-4">§5.4</a></div></details>
+  <details class="q"><summary>What made Kaminsky practical, and why is poisoning NS worse than poisoning one A record?</summary><div class="a">Random never-cached subdomains force a new upstream query each time, giving unlimited races. The payload is forged NS delegation data, which sends every future query for the whole zone to the attacker. <a class="xref" href="#s5-5">§5.5</a></div></details>
+  <details class="q"><summary>What does bailiwick checking prevent, and why doesn’t it stop Kaminsky alone?</summary><div class="a">Caching unrelated, unsolicited records for zones the responder is not responsible for. Kaminsky’s forged NS records for victim.com are in-bailiwick for a reply claiming to be from victim.com’s server. <a class="xref" href="#s5-5">§5.5</a></div></details>
+  <details class="q"><summary>Name DNSKEY, RRSIG and DS in one line each.</summary><div class="a">DNSKEY: zone’s public key. RRSIG: signature over one RRset, valid for a date range. DS: parent-held, parent-signed hash of the child’s key-signing key. <a class="xref" href="#s5-7">§5.7</a></div></details>
+  <details class="q"><summary>Why can’t a zone just sign “NXDOMAIN”, and which security property does zone walking affect?</summary><div class="a">Infinitely many names, and one generic signed NXDOMAIN could be replayed against real names. NSEC/NSEC3 sign the gaps. Zone walking (NSEC) affects <b>confidentiality of zone contents</b>, not integrity. <a class="xref" href="#s5-7">§5.7</a></div></details>
+  <details class="q"><summary>Does DoH stop a malicious resolver from lying? Does DNSSEC hide your queries?</summary><div class="a">No and no. DoH only encrypts the pipe, which ends at the liar; DNSSEC validated on your own device detects lies for signed zones. DNSSEC signs data but encrypts nothing. <a class="xref" href="#s5-8">§5.8</a></div></details>
+  <details class="q"><summary>Encode “a.io” in DNS wire format.</summary><div class="a"><code>01 61 02 69 6f 00</code> (6 bytes). <a class="xref" href="#s5-3">§5.3</a></div></details>
+
+  <h4>TLS 1.3 · Week 6 (slides 1–52)</h4>
+  <details class="q"><summary>Why does TLS need its own record layer above TCP?</summary><div class="a">TCP is a byte stream with no message boundaries, no encryption and no authentication. Records (≤ 16 KB) are the units of protection and carry the per-record sequence state. <a class="xref" href="#s6-3">§6.3</a></div></details>
+  <details class="q"><summary>The TLS 1.3 record sequence number is never sent. How does it still stop reordering and replay inside a connection?</summary><div class="a">It is mixed into the nonce (IV ⊕ seq). A record moved to another position is decrypted with the wrong nonce and fails the AEAD tag check. <a class="xref" href="#s6-3">§6.3</a></div></details>
+  <details class="q"><summary>Why did TLS 1.3 remove CBC suites?</summary><div class="a">CBC + HMAC as MAC-then-encrypt required padding checks before MAC checks, creating distinguishable errors/timing (padding oracles: Lucky13, POODLE). AEAD-only gives one interface and one failure mode. <a class="xref" href="#s6-3">§6.3</a></div></details>
+  <details class="q"><summary>Which TLS 1.3 handshake messages are plaintext, and why can’t they be encrypted?</summary><div class="a">ClientHello and ServerHello. No shared secret exists until both key shares are exchanged; everything after ServerHello uses handshake keys. <a class="xref" href="#s6-5">§6.5</a></div></details>
+  <details class="q"><summary>The certificate is valid. Why is CertificateVerify still needed?</summary><div class="a">Certificates are public; anyone can replay one. CertificateVerify proves possession of the private key, bound to this handshake’s transcript (including both key shares). <a class="xref" href="#s6-5">§6.5</a></div></details>
+  <details class="q"><summary>An attacker deletes the strongest cipher suite from ClientHello. What catches it?</summary><div class="a">The transcript hash changes, so CertificateVerify and Finished (HMAC over the transcript) fail, and the derived keys differ. Negotiation integrity. <a class="xref" href="#s6-5">§6.5</a></div></details>
+  <details class="q"><summary>What exactly does a TLS 1.3 cipher suite name specify? Compare with TLS 1.2.</summary><div class="a">Only AEAD + hash (e.g. <code>TLS_AES_128_GCM_SHA256</code>). Key exchange and signature algorithm are negotiated by extensions. TLS 1.2 names bundled key exchange, authentication, cipher and PRF hash. <a class="xref" href="#s6-5">§6.5</a></div></details>
+  <details class="q"><summary>Is the visited hostname hidden by TLS 1.3?</summary><div class="a">Not by default: SNI is in the plaintext ClientHello. ECH encrypts it. IP addresses, timing and sizes remain visible regardless. <a class="xref" href="#s6-5">§6.5</a> <a class="xref" href="#s6-2">§6.2</a></div></details>
+  <details class="q"><summary>Does mTLS decide what a client may do?</summary><div class="a">No. It authenticates a cryptographic identity; authorization remains a separate application decision. <a class="xref" href="#s6-7">§6.7</a></div></details>
+</section>
+
+<footer style="margin-top:48px;padding-top:14px;border-top:1px solid var(--line);color:var(--muted);font-size:13px">
+  Built from the CSE425 decks: Week 1 lecture + lab, Week 2, Week 3 lecture + lab tutorial, Week 4, Week 5 DNS self-study, Week 6 TLS &amp; PKI self-study slides 1–52.
+</footer>
+</main>
+</div>
+
+<script>
+(function(){
+  var store={get:function(k){try{return localStorage.getItem(k)}catch(e){return null}},set:function(k,v){try{localStorage.setItem(k,v)}catch(e){}}};
+  var boxes=document.querySelectorAll('input[data-sec]');
+  function mark(id,on){var a=document.querySelector('#tocList a[href="#'+id+'"]');if(a)a.classList.toggle('studied',on)}
+  boxes.forEach(function(b){
+    var id=b.getAttribute('data-sec'); var on=store.get('cse425-'+id)==='1';
+    b.checked=on; mark(id,on);
+    b.addEventListener('change',function(){store.set('cse425-'+id,b.checked?'1':'0');mark(id,b.checked)});
+  });
+  document.getElementById('openAll').addEventListener('click',function(){document.querySelectorAll('details.q').forEach(function(d){d.open=true})});
+  document.getElementById('closeAll').addEventListener('click',function(){document.querySelectorAll('details.q').forEach(function(d){d.open=false})});
+  var links=document.querySelectorAll('#tocList a');
+  if('IntersectionObserver' in window){
+    var parts=document.querySelectorAll('section.part');
+    var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){links.forEach(function(l){l.classList.toggle('on',l.getAttribute('href')==='#'+e.target.id)})}})},{rootMargin:'-20% 0px -70% 0px'});
+    parts.forEach(function(p){io.observe(p)});
+  }
+})();
+</script>
+
+</body></html>
