@@ -142,6 +142,19 @@ button{font:inherit;font-size:13.5px;border:1px solid var(--line);background:var
 button:hover{border-color:var(--accent)}
 .wk{font-family:var(--f-mono);font-size:11.5px;color:var(--muted);white-space:nowrap}
 
+/* scenarios */
+.scenario{border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:0 10px 10px 0;background:var(--surface);padding:14px 16px;margin:16px 0}
+.scenario h4{margin:0 0 6px;font-family:var(--f-display);font-stretch:90%;font-weight:700;font-size:17px;color:var(--ink)}
+.scenario h4 .sc{font-family:var(--f-mono);font-weight:500;font-size:12px;color:var(--accent);margin-right:8px;letter-spacing:.04em}
+.scenario .setup{margin:0 0 8px}
+.scenario .ask{margin:8px 0 0;font-size:14.5px;color:var(--muted)}
+.scenario .ask b{color:var(--ink)}
+.scenario ol.subq{margin:4px 0 0;padding-left:22px}
+.scenario details.q{margin:10px 0 0}
+.scenario .a ul{margin:4px 0 0;padding-left:0;list-style:none}
+.scenario .a ul li{margin:4px 0;padding-left:0}
+.scenario .a ul li b{display:inline-block;min-width:92px;color:var(--accent)}
+
 @media (prefers-reduced-motion:no-preference){html{scroll-behavior:smooth}}
 </style>
 
@@ -159,6 +172,7 @@ button:hover{border-color:var(--accent)}
     <li><a href="#s7"><span class="n">7</span>Formula &amp; mechanism sheet<span class="tick">✓</span></a></li>
     <li><a href="#s8"><span class="n">8</span>Practice Qs · from slides<span class="tick">✓</span></a></li>
     <li><a href="#s9"><span class="n">9</span>Practice Qs · additions<span class="tick">✓</span></a></li>
+    <li><a href="#s10"><span class="n">10</span>Scenario questions<span class="tick">✓</span></a></li>
   </ol>
 </nav>
 
@@ -173,7 +187,7 @@ button:hover{border-color:var(--accent)}
   </ul>
   <details class="toc-mobile"><summary>Sections</summary>
     <ol>
-      <li><a href="#s0">Start here</a></li><li><a href="#s1">Foundations</a></li><li><a href="#s2">Symmetric crypto</a></li><li><a href="#s3">Integrity &amp; public key</a></li><li><a href="#s4">HTTP &amp; sessions</a></li><li><a href="#s5">DNS</a></li><li><a href="#s6">TLS 1.3 (to slide 52)</a></li><li><a href="#s7">Formula &amp; mechanism sheet</a></li><li><a href="#s8">Practice Qs · from slides</a></li><li><a href="#s9">Practice Qs · additions</a></li>
+      <li><a href="#s0">Start here</a></li><li><a href="#s1">Foundations</a></li><li><a href="#s2">Symmetric crypto</a></li><li><a href="#s3">Integrity &amp; public key</a></li><li><a href="#s4">HTTP &amp; sessions</a></li><li><a href="#s5">DNS</a></li><li><a href="#s6">TLS 1.3 (to slide 52)</a></li><li><a href="#s7">Formula &amp; mechanism sheet</a></li><li><a href="#s8">Practice Qs · from slides</a></li><li><a href="#s9">Practice Qs · additions</a></li><li><a href="#s10">Scenario questions</a></li>
     </ol>
   </details>
 </header>
@@ -1034,6 +1048,105 @@ a.io             →  01 61 | 02 69 6f | 00                                     
   <details class="q"><summary>An attacker deletes the strongest cipher suite from ClientHello. What catches it?</summary><div class="a">The transcript hash changes, so CertificateVerify and Finished (HMAC over the transcript) fail, and the derived keys differ. Negotiation integrity. <a class="xref" href="#s6-5">§6.5</a></div></details>
   <details class="q"><summary>Is the visited hostname hidden by TLS 1.3?</summary><div class="a">Not by default: SNI is in the plaintext ClientHello. ECH encrypts it. IP addresses, timing and sizes remain visible regardless. <a class="xref" href="#s6-5">§6.5</a> <a class="xref" href="#s6-2">§6.2</a></div></details>
   <details class="q"><summary>Does mTLS decide what a client may do?</summary><div class="a">No. It authenticates a cryptographic identity; authorization remains a separate application decision. <a class="xref" href="#s6-7">§6.7</a></div></details>
+</section>
+
+<!-- ============ 10 : SCENARIO QUESTIONS ============ -->
+<section class="part" id="s10">
+  <div class="part-head"><div><span class="eyebrow">Exam practice · multi-part</span><h2>10 · Scenario questions</h2></div>
+  <label class="done"><input type="checkbox" id="done-s10" data-sec="s10"> studied</label></div>
+  <p>Each scenario is answered with the five-part pattern from <a class="xref" href="#s0-1">§0.1</a>: <b>(i) asset · (ii) property · (iii) attacker position + behaviour · (iv) root cause · (v) fix</b>. Work it through before opening the model answer. The Show/Hide buttons in <a class="xref" href="#s8">§8</a> open every answer on the page.</p>
+
+  <div class="scenario">
+    <h4><span class="sc">Scenario 1</span>The university portal</h4>
+    <p class="setup">A student logs in through HTTPS. After login, the application sends the session cookie over an <em>HTTP</em> request because the cookie is not marked <code>Secure</code>. An attacker on the campus network captures it.</p>
+    <ol class="subq">
+      <li>Which property fails first?</li>
+      <li>Can the attacker access the account without knowing the password?</li>
+      <li>Is <code>HttpOnly</code> sufficient?</li>
+      <li>Propose two defensive measures.</li>
+    </ol>
+    <details class="q"><summary>Model answer</summary><div class="a">
+      <p><b>Confidentiality</b> of the session token fails first. The attacker <em>can</em> reuse the cookie while the session is valid and nothing binds it to the client — no password needed (bearer token, <a class="xref" href="#s4-3">§4.3</a>). <code>HttpOnly</code> does <b>not</b> stop network sniffing (it only blocks <code>document.cookie</code>). Fixes: enforce HTTPS everywhere + mark the cookie <code>Secure</code>; add proper session expiration, rotation and server-side invalidation; consider HSTS. <a class="xref" href="#s4-4">§4.4</a> <a class="xref" href="#s4-5">§4.5</a></p>
+    </div></details>
+  </div>
+
+  <div class="scenario">
+    <h4><span class="sc">Scenario 2</span>Database column in ECB mode</h4>
+    <p class="setup">A web application stores each user's <code>account_type</code> in a database column encrypted with <b>AES in ECB mode</b>. An insider can read the table but does not have the key, and wants to find every administrator account.</p>
+    <p class="ask"><b>Q:</b> Can the insider identify the admin rows without the key? Identify (i)–(v).</p>
+    <details class="q"><summary>Model answer</summary><div class="a"><ul>
+      <li><b>(i) Asset</b> — the <code>account_type</code> values (which rows are admin).</li>
+      <li><b>(ii) Property</b> — confidentiality.</li>
+      <li><b>(iii) Attacker</b> — endpoint/insider, passive read: no key, no network access needed.</li>
+      <li><b>(iv) Root cause</b> — ECB is deterministic: equal plaintext values encrypt to equal ciphertext blocks, so identical <code>account_type</code> values share a ciphertext and the rare block (“admin”) stands out against the common one (“user”). <a class="xref" href="#s2-5">§2.5</a></li>
+      <li><b>(v) Fix</b> — use an AEAD mode with a unique nonce per record, so ciphertexts differ even for equal values.</li>
+    </ul></div></details>
+  </div>
+
+  <div class="scenario">
+    <h4><span class="sc">Scenario 3</span>Prefix-MAC API: <code>tag = SHA256(secret ‖ request)</code></h4>
+    <p class="setup">An API authenticates requests with <code>tag = SHA256(secret ‖ request)</code>. An attacker who captures one valid request + tag submits <code>request ‖ padding ‖ &amp;role=admin</code> with a new tag, and the server accepts it.</p>
+    <p class="ask"><b>Q:</b> Did the attacker recover the secret? Identify (i)–(v).</p>
+    <details class="q"><summary>Model answer</summary><div class="a"><ul>
+      <li><b>(i) Asset</b> — request integrity / authorization.</li>
+      <li><b>(ii) Property</b> — integrity and data-origin authentication.</li>
+      <li><b>(iii) Attacker</b> — off-path active: needs only one valid message + tag.</li>
+      <li><b>(iv) Root cause</b> — a Merkle–Damgård prefix-MAC: the digest is the hash state after <code>secret‖request</code>, so the attacker length-extends after guessing the secret length — without the secret, a collision, or inversion. <a class="xref" href="#s3-2">§3.2</a></li>
+      <li><b>(v) Fix</b> — replace with HMAC; verify with constant-time comparison.</li>
+    </ul></div></details>
+  </div>
+
+  <div class="scenario">
+    <h4><span class="sc">Scenario 4</span>TLD key rollover (.de outage, May 2026)</h4>
+    <p class="setup">A TLD registry's routine key rollover published DNSSEC signatures that didn't validate. Validating resolvers returned <code>SERVFAIL</code>, and millions of domains became unreachable; unsigned and unrelated zones were unaffected.</p>
+    <p class="ask"><b>Q:</b> Which property was violated, and was there an attacker? Identify (i)–(v).</p>
+    <details class="q"><summary>Model answer</summary><div class="a"><ul>
+      <li><b>(i) Asset</b> — availability of every name under the TLD.</li>
+      <li><b>(ii) Property</b> — availability. Confidentiality and integrity held; the resolvers behaved correctly.</li>
+      <li><b>(iii) Attacker</b> — none: operational misconfiguration, not an attack.</li>
+      <li><b>(iv) Root cause</b> — the rollover generated non-validatable signatures, so correct validators rejected the whole zone. <a class="xref" href="#s5-7">§5.7</a></li>
+      <li><b>(v) Fix / response</b> — registry fixes the zone; resolvers mitigate with serve-stale (RFC 8767) and a temporary negative trust anchor (mark the TLD insecure). DNSSEC trades availability for authenticity; disabling validation to recover re-exposes the zone to forgery.</li>
+    </ul></div></details>
+  </div>
+
+  <div class="scenario">
+    <h4><span class="sc">Scenario 5</span>Downgraded handshake</h4>
+    <p class="setup">A man-in-the-middle edits the handshake so both sides fall back to an old TLS version with weak, exportable crypto.</p>
+    <p class="ask"><b>Q:</b> What class of failure is this, and how does TLS 1.3 prevent it? Identify (i)–(v).</p>
+    <details class="q"><summary>Model answer</summary><div class="a"><ul>
+      <li><b>(i) Asset</b> — the negotiated parameters (version / cipher).</li>
+      <li><b>(ii) Property</b> — negotiation integrity. <a class="xref" href="#s6-2">§6.2</a></li>
+      <li><b>(iii) Attacker</b> — on-path active.</li>
+      <li><b>(iv) Root cause</b> — version/cipher negotiation not cryptographically bound (the FREAK / Logjam class).</li>
+      <li><b>(v) Fix</b> — TLS 1.3 binds the transcript (Finished, <a class="xref" href="#s6-5">§6.5</a>) and signals a downgrade via the <code>ServerHello.random</code> sentinel; drop legacy versions and export suites. <span class="wk">(FREAK/Logjam detail is beyond slide 52.)</span></li>
+    </ul></div></details>
+  </div>
+
+  <div class="scenario">
+    <h4><span class="sc">Scenario 6</span>Malware over DoH (Noir drainer pattern)</h4>
+    <p class="setup">Malware reads its current command-and-control domain from a TXT record fetched over <b>DNS-over-HTTPS</b> to a public resolver; the enterprise's own resolver never sees the lookup.</p>
+    <p class="ask"><b>Q:</b> Why does DoH help the attacker here, and what is lost? Identify (i)–(v).</p>
+    <details class="q"><summary>Model answer</summary><div class="a"><ul>
+      <li><b>(i) Asset</b> — the defender's network visibility: the ability to detect and block.</li>
+      <li><b>(ii) Property</b> — monitoring / policy enforcement: DoH's confidentiality is used <em>against</em> the defender.</li>
+      <li><b>(iii) Attacker</b> — compromised endpoint using DoH to an external resolver.</li>
+      <li><b>(iv) Root cause</b> — DoH encrypts and reroutes DNS around enterprise inspection and filtering. <a class="xref" href="#s5-8">§5.8</a> <a class="xref" href="#s5-6">§5.6</a></li>
+      <li><b>(v) Fix</b> — force clients to the internal resolver, log DNS centrally, apply reputation filtering. Encryption protects the pipe, not intent.</li>
+    </ul></div></details>
+  </div>
+
+  <div class="scenario">
+    <h4><span class="sc">Scenario 7</span>HttpOnly ≠ XSS fixed</h4>
+    <p class="setup">A team sets <code>HttpOnly</code> on session cookies and closes the XSS ticket. An injected script can't read the cookie but still transfers money as the logged-in user.</p>
+    <p class="ask"><b>Q:</b> Was the XSS actually mitigated? Identify (i)–(v).</p>
+    <details class="q"><summary>Model answer</summary><div class="a"><ul>
+      <li><b>(i) Asset</b> — user actions / authority (and the cookie).</li>
+      <li><b>(ii) Property</b> — integrity / authorization of actions (the cookie's confidentiality is partly protected).</li>
+      <li><b>(iii) Attacker</b> — attacker-controlled script in the victim's browser context.</li>
+      <li><b>(iv) Root cause</b> — <code>HttpOnly</code> blocks <code>document.cookie</code> reads, not script-initiated requests that automatically carry the cookie. <a class="xref" href="#s4-4">§4.4</a></li>
+      <li><b>(v) Fix</b> — fix the XSS (output encoding, CSP); treat <code>HttpOnly</code> as defense-in-depth only. <a class="xref" href="#s4-6">§4.6</a></li>
+    </ul></div></details>
+  </div>
 </section>
 
 <footer style="margin-top:48px;padding-top:14px;border-top:1px solid var(--line);color:var(--muted);font-size:13px">
