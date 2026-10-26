@@ -1147,6 +1147,84 @@ a.io             →  01 61 | 02 69 6f | 00                                     
       <li><b>(v) Fix</b> — fix the XSS (output encoding, CSP); treat <code>HttpOnly</code> as defense-in-depth only. <a class="xref" href="#s4-6">§4.6</a></li>
     </ul></div></details>
   </div>
+
+  <div class="scenario">
+    <h4><span class="sc">Scenario 8</span>Replayed transfer</h4>
+    <p class="setup">An attacker re-sends yesterday's captured (still-encrypted) <code>"transfer 100 TL"</code> message, and the bank processes the transfer a second time.</p>
+    <p class="ask"><b>Q:</b> Was the cryptography broken? Identify (i)–(v).</p>
+    <details class="q"><summary>Model answer</summary><div class="a"><ul>
+      <li><b>(i) Asset</b> — the transfer command and the freshness of the protocol run.</li>
+      <li><b>(ii) Property</b> — freshness (and integrity of the exchange); confidentiality held.</li>
+      <li><b>(iii) Attacker</b> — on-path: captured the message once, now resends it (replay).</li>
+      <li><b>(iv) Root cause</b> — the protocol accepts a stale but valid ciphertext; a secure primitive does not make a secure protocol. The attacker never decrypted anything. <a class="xref" href="#s1-3">§1.3</a> <span class="t">T3</span></li>
+      <li><b>(v) Fix</b> — bind each message to a nonce / sequence number / timestamp or session state, so a replayed message is rejected.</li>
+    </ul></div></details>
+  </div>
+
+  <div class="scenario">
+    <h4><span class="sc">Scenario 9</span>CTR with a reused nonce</h4>
+    <p class="setup">Two messages are encrypted with the <b>same key and the same nonce</b> in CTR mode. An attacker XORs the two ciphertexts.</p>
+    <p class="ask"><b>Q:</b> What does the attacker learn, and is AES broken? Identify (i)–(v).</p>
+    <details class="q"><summary>Model answer</summary><div class="a"><ul>
+      <li><b>(i) Asset</b> — the two plaintexts.</li>
+      <li><b>(ii) Property</b> — confidentiality.</li>
+      <li><b>(iii) Attacker</b> — passive observer (ciphertext-only).</li>
+      <li><b>(iv) Root cause</b> — same key + nonce ⇒ same keystream S, so <code>C₁ ⊕ C₂ = M₁ ⊕ M₂</code>: the keystream cancels and the plaintext relationship leaks (with one known, the other is recovered, <code>M₂ = C₁ ⊕ C₂ ⊕ M₁</code>). AES is fine; nonce <em>uniqueness</em> was violated. <a class="xref" href="#s2-5">§2.5</a> <span class="t">T5</span></li>
+      <li><b>(v) Fix</b> — never reuse a nonce under one key; use a proper counter/random nonce, and prefer AEAD with strict nonce discipline.</li>
+    </ul></div></details>
+  </div>
+
+  <div class="scenario">
+    <h4><span class="sc">Scenario 10</span>Harvest now, decrypt later</h4>
+    <p class="setup">An attacker recorded a server's encrypted traffic a year ago. Today the server's <b>long-term private key</b> is stolen.</p>
+    <p class="ask"><b>Q:</b> Which recorded sessions can now be decrypted? Identify (i)–(v).</p>
+    <details class="q"><summary>Model answer</summary><div class="a"><ul>
+      <li><b>(i) Asset</b> — confidentiality of the past, recorded sessions.</li>
+      <li><b>(ii) Property</b> — forward secrecy of past session keys.</li>
+      <li><b>(iii) Attacker</b> — passive recorder who later obtains the long-term key.</li>
+      <li><b>(iv) Root cause</b> — if the session key was derived from the long-term key (RSA key transport), stealing it exposes every recorded session. With ephemeral <b>(EC)DHE</b> the per-session secrets were erased and cannot be recomputed. <a class="xref" href="#s3-6">§3.6</a></li>
+      <li><b>(v) Fix</b> — use ephemeral (EC)DHE for forward secrecy (mandatory in TLS 1.3); the long-term key only authenticates the exchange, it never derives the session key. <a class="xref" href="#s6-5">§6.5</a></li>
+    </ul></div></details>
+  </div>
+
+  <div class="scenario">
+    <h4><span class="sc">Scenario 11</span>Off-path cache-poisoning race</h4>
+    <p class="setup">A recursive resolver uses a <b>predictable source port</b>. An off-path attacker floods forged replies for a bank domain, guessing the TXID, and wins the race before the real answer arrives.</p>
+    <p class="ask"><b>Q:</b> Did the attacker break cryptography? Identify (i)–(v).</p>
+    <details class="q"><summary>Model answer</summary><div class="a"><ul>
+      <li><b>(i) Asset</b> — the cached name → address mapping.</li>
+      <li><b>(ii) Property</b> — data-origin authentication / integrity of DNS data (and correct availability).</li>
+      <li><b>(iii) Attacker</b> — off-path active: cannot see the query, floods guesses, races the real reply.</li>
+      <li><b>(iv) Root cause</b> — reply matching relied on guessable values (TXID + a predictable port) used as if they were authentication; low entropy makes the race winnable (the CVE-2025-40780 class). <a class="xref" href="#s5-4">§5.4</a> <span class="t">T7</span></li>
+      <li><b>(v) Fix</b> — randomize TXID and source port, apply bailiwick/credibility checks, and above all DNSSEC validation, so a forged answer fails even when the race is won. <a class="xref" href="#s5-5">§5.5</a></li>
+    </ul></div></details>
+  </div>
+
+  <div class="scenario">
+    <h4><span class="sc">Scenario 12</span>“Trust all certificates”</h4>
+    <p class="setup">A mobile app disables certificate validation (<code>verify=False</code> / trust-all) to silence a certificate error. It works fine in testing.</p>
+    <p class="ask"><b>Q:</b> What is the real exposure? Identify (i)–(v).</p>
+    <details class="q"><summary>Model answer</summary><div class="a"><ul>
+      <li><b>(i) Asset</b> — server identity / the channel's authentication.</li>
+      <li><b>(ii) Property</b> — authentication (of the server). Encryption still happens — but to an unverified peer.</li>
+      <li><b>(iii) Attacker</b> — on-path active (MITM): presents any certificate and is accepted.</li>
+      <li><b>(iv) Root cause</b> — encryption without authenticating the peer is a private channel with the wrong party; skipping validation removes the identity binding. <a class="xref" href="#s6-5">§6.5</a> <span class="t">T4</span></li>
+      <li><b>(v) Fix</b> — validate the chain and the hostname (SAN) against the trust store; never disable validation; fix the underlying certificate error (or pin). <a class="xref" href="#s4-6">§4.6</a></li>
+    </ul></div></details>
+  </div>
+
+  <div class="scenario">
+    <h4><span class="sc">Scenario 13</span>0-RTT replay</h4>
+    <p class="setup">A payment API enables TLS 1.3 <b>0-RTT early data</b> for speed. An on-path attacker captures and replays the client's first flight.</p>
+    <p class="ask"><b>Q:</b> Why is this dangerous even though it's encrypted? Identify (i)–(v).</p>
+    <details class="q"><summary>Model answer</summary><div class="a"><ul>
+      <li><b>(i) Asset</b> — the exactly-once execution of the request (the payment action).</li>
+      <li><b>(ii) Property</b> — freshness / replay resistance; confidentiality itself holds.</li>
+      <li><b>(iii) Attacker</b> — on-path active: replays the captured 0-RTT data.</li>
+      <li><b>(iv) Root cause</b> — 0-RTT early data carries no full-handshake freshness, so the server may accept the same request twice; “encrypted” is not “executed once”. <a class="xref" href="#s6-2">§6.2</a></li>
+      <li><b>(v) Fix</b> — keep non-idempotent / state-changing requests (payments) out of 0-RTT; add anti-replay windows and application-level idempotency keys. <span class="wk">(0-RTT detail is beyond slide 52.)</span></li>
+    </ul></div></details>
+  </div>
 </section>
 
 <footer style="margin-top:48px;padding-top:14px;border-top:1px solid var(--line);color:var(--muted);font-size:13px">
